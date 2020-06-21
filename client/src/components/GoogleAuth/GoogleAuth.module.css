@@ -1,0 +1,37 @@
+
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+button.oAuth{
+    border: 2px solid #ccc;
+    border-radius: 15rem;
+    display: block;
+    background-color: #fff;
+    cursor: pointer;
+    margin-top: 2rem;
+    padding: 1.25rem 1rem;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+button.oAuth img{
+    display: block;
+    height: 2rem;
+    width: 2rem;
+    margin: 0 0.2rem;
+}
+
+button.oAuth p{
+    text-align: center;
+    justify-self: center;
+    font-weight: 600;
+    color: var(--color-dark);
+    text-transform: uppercase;
+}

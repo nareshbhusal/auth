@@ -1,0 +1,113 @@
+.container{
+    /* border: 1px solid blue; */
+    /* justify-content: center; */
+    /* display: flex; */
+}
+
+.form{
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+.group{
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+}
+
+.group .field:nth-of-type(1){
+    /* flex: 1; */
+    width: 5rem;
+    margin-right: 1rem;
+}
+.group .field:nth-of-type(2){
+    /* flex: 1; */
+    width: 5rem;
+    margin-right: 2rem;
+    justify-self: flex-start;
+}
+
+.group .field:nth-of-type(3){
+    /* flex: 4; */
+    width: 10rem;
+    justify-self: end;
+    position: absolute;
+    right: 0%;
+    top: 0%;
+}
+
+.form label{
+    text-transform: capitalize;
+    color: #333;
+    font-weight: lighter;
+}
+.form label[for="cvv"]{
+    text-transform: uppercase;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+    margin: 1.2rem 0;
+}
+
+.form input{
+    padding: 0.75rem;
+    border: 1px solid #777;
+    border-radius: 0.5rem;
+    width: 100%;
+    font-weight: lighter;
+    outline: none;
+    transition: 0.2s;
+}
+
+.inputWrapper{
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.inputWrapper img{
+    display: block;
+    width: 2rem;
+    height: auto;
+    position: absolute;
+    left: 0%;
+    margin-left: 0.25rem;
+}
+
+.inputWrapper input{
+    padding-left: 3.7rem;
+}
+
+.form input::placeholder{
+    text-transform: capitalize;
+}
+
+.form input:focus{
+    border-color: var(--color-primary);
+}
+
+.form input[type="submit"]{
+    background-color: var(--color-primary);
+    text-transform: uppercase;
+    font-weight: bold;
+    border-color: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form input[type="submit"]:hover{
+    opacity: 0.87;
+}
+
+.hidden {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}

@@ -1,0 +1,3 @@
+Configure postgres and redis only for development.
+Seperate out postgres and redis server as well.
+
