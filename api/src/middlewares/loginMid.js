@@ -12,6 +12,7 @@ const loginMid = async (req, res, next) => {
         let { email, password, tokenId } = req.body;
         // console.log('trying to login with', req.body);
         // logging in via email
+        console.log(req.body);
         let viaGoogle;
         if (password && email) {
             viaGoogle=false;

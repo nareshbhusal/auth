@@ -1,32 +1,38 @@
-version: '1'
+version: '3'
 services:
   postgres:
     image: 'postgres:latest'
+    volumes:
+        - ./postgres-data:/var/lib/postgresql/data
+    env_file: .env
+    ports: '5432:5432'
+  pgadmin:
+    image: dpage/pgadmin4
+    links:
+      - postgres
+    depends_on:
+      - postgres
     environment:
-      - POSTGRES_PASSWORD=postgres_password
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: pwdpwd
+    volumes:
+      - ./pgadmin:/root/.pgadmin
+    ports:
+      - '5050:80'
   redis: 
     image: 'redis:latest'
-  nginx:
-    restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    ports:
-      - '3050:80'
-    stdin_open: true
-    depends_on:
-      - api
-      - client
   api:
     build:
       dockerfile: Dockerfile.dev
-      context: ./server
+      context: ./api
+    ports:
+      - '5000:5000'
     depends_on:
       - postgres
       - redis
     volumes:
       - /app/node_modules
-      - ./server:/app
+      - ./api:/app
     stdin_open: true
     tty: true
     environment:
@@ -37,25 +43,16 @@ services:
       - PGHOST=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
-  client:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-    stdin_open: true
-    tty: true
-  worker:
+  redis-server:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     build:
       dockerfile: Dockerfile.dev
-      context: ./worker
+      context: ./redis
     volumes:
       - /app/node_modules
-      - ./worker:/app
+      - ./redis:/app
     stdin_open: true
     tty: true
     depends_on:

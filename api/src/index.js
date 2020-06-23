@@ -8,7 +8,7 @@ const app = express();
 const uuid = require('uuid');
 const path = require('path');
 
-const api = require('./api');
+const api = require('./routes');
 
 // configure middlewares
 app.set('trust proxy', true);
