@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const { DB_NAME, HOST, DB_USER, DB_PASS } = process.env;
 
+//console.log(DB_NAME, HOST, DB_USER, DB_PASS);
+
 module.exports = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
     host: HOST,
     dialect: 'postgres',
@@ -13,5 +15,5 @@ module.exports = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
     define : {
         timestamps: false
     },
-    logging: false
+    //logging: false
 })
