@@ -22,17 +22,15 @@ services:
       - '5050:80'
     logging:
       driver: none
-  redis: 
-    image: 'redis:latest'
   api:
     build:
       dockerfile: Dockerfile.dev
       context: ./api
     ports:
-      - '5001:5000'
+      - '5000:5000'
     depends_on:
       - postgres
-      - redis
+      - redis-server
     volumes:
       - /app/node_modules
       - ./api:/app
@@ -52,11 +50,9 @@ services:
       - REDIS_PORT=6379
     build:
       dockerfile: Dockerfile.dev
-      context: ./redis
+      context: ./redis-server
     volumes:
       - /app/node_modules
-      - ./redis:/app
+      - ./redis-server:/app
     stdin_open: true
     tty: true
-    depends_on:
-      - redis

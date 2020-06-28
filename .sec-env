@@ -1,3 +1,0 @@
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=devpostgresauth
-POSTGRES_DB=auth
