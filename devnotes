@@ -2,5 +2,8 @@
 abstraction, so as to be able to perform everything from the cli
 /learn rest api design
 
-- learn and setup redis server
+- how many middlewares can you configure, can you seperate a process
+like login in terms of serial execution, like: validateInput =>
+existingUserCheck => prepareSession
 
+- memory leaks in node and detecting them

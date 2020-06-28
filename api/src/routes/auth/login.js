@@ -33,8 +33,6 @@ module.exports = async (req, res) => {
     try {
         const requestedUser = req.body;
 
-        // let { email, password, tokenId } = req.body;
-
         // determine login mode
         let LOGIN_MODE = getLoginMode(requestedUser);
 
@@ -50,8 +48,7 @@ module.exports = async (req, res) => {
          }
 
 
-        // incorrect login modes used
-
+        // if incorrect login modes used
         if (LOGIN_MODE==='oauth' && 
             userInRecords.auth_system==='native') {
 
@@ -68,23 +65,28 @@ module.exports = async (req, res) => {
     
         if (LOGIN_MODE===OAUTH) {
             
+            // login with google auth
             return res.send('loging in via oauth');
         } else if(LOGIN_MODE==='native_auth') {
 
             // verify password
-                // is correct
-                    // save session
-                    // send success
-                    /*
-                    await updateSessionIDs(userInRecords, req.sessionID);
-                    // set user on cookie
-                    addCookie(req, userInRecords);
-                    const id = userInRecords.id;
-                    return res.send({ msg: 'Logged in!', id });
-                    */
+            const match = await bcrypt.compare(password, userInRecords.password);
+ 
+            if(match) {                
+                // save session
+                // send success
+                /*
+                await updateSessionIDs(userInRecords, req.sessionID);
+                // set user on cookie
+                addCookie(req, userInRecords);
+                const id = userInRecords.id;
+                return res.send({ msg: 'Logged in!', id });
+                */
+            } else {
                 // is incorrect
                     // send failed password
                     // return res.status(401).send(INCORRECT_CRED);
+            }
             return res.send('loging in via native auth');
         } else {
             throw 'something is wrong lol, LOGIN_MODE: '+LOGIN_MODE

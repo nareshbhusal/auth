@@ -1,7 +1,7 @@
 const getUser = require('./getUser');
 
 const isLoggedIn = async(req) => {
-    // console.log('***is it logged in',req.session, req.sessionID);
+
     if (!req.session) {
         return false;
     } else if(!req.session.user){
@@ -9,12 +9,11 @@ const isLoggedIn = async(req) => {
     } else if(!req.session.user.id) {
         return false;
     }
-    // lookup the user in the DB by pulling their email from the session
+    // pull user corresponding to the cookie saved 
     const id = req.session.user.id;
     
     const user = await getUser({ id });
 
-    // console.log('***user',user);
     // Check if the userid and sessionID in session match the ones in DB
     if (user) {
         // console.log(req.sessionID, 'against',user.session_ids);
