@@ -25,7 +25,7 @@ redisClient.on('error', console.error);
 const RedisStore = require('connect-redis')(session);
 
 
-const api = require('./api');
+const api = require('./routes');
 
 // configure middlewares
 app.set('trust proxy', true);

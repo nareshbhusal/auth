@@ -9,7 +9,7 @@ const logout = async(req, res) => {
     // Clear session_id from the database
     console.log(req.session, req.sessionID);
     if (req.session.user) {
-        try{
+        try {
             const userId = req.session.user.id;
             const user = await getUser({ id: userId });
             if (user) {

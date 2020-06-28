@@ -4,7 +4,7 @@ const getUser = require('../../controllers/user/getUser');
 
 const login = async(req, res) => {
     const { user } = req.body;
-//	return res.send('Login via native auth please')
+
     try {
         const userInRecords = await getUser({email: user.email});
         if (userInRecords) {

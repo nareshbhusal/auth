@@ -7,14 +7,14 @@ const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@
 
 const minPassLength=8;
 
+const emailError = { err: 'Email is already in use!' };
+const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
+const serverError = { err: 'Server error: Something went wrong checking authorization' };
+const oauthError = { err: 'OAuth failed to give email and name!' }
 
 const registerMid = async (req, res, next) => {
 
     // server side validation
-    const emailError = { err: 'Email is already in use!' };
-    const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
-    const serverError = { err: 'Server error: Something went wrong checking authorization' };
-    const oauthError = { err: 'OAuth failed to give email and name!' }
 
     console.log('attempting registeration');
     try {
