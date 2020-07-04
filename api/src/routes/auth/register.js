@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
     try {
 
         let userData = req.body;
-
+        //return res.send('register route');
         // determine login mode
         let SIGNIN_MODE = getSignInMode(userData);
 
@@ -61,15 +61,17 @@ module.exports = async (req, res) => {
         // attach creation time
         const userToCreate = {
             ...userData,
+            auth_system: 'native_auth',
             joined: new Date().getTime()
         }
         // create user
 
         //return res.send('going to create now');
 
-        const phash = await createUser(userData);
-        return res.send(phash);
+        const createdUser = await createUser(userToCreate);
+        console.log(createdUser);
         return res.send('user created successfully');
+
 
         // save session
 

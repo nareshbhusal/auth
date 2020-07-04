@@ -1,6 +1,9 @@
 const updateSessionIDs = require('../../controllers/session/updateSessionIDs');
 const addCookie = require('../../controllers/session/addCookie');
 const getUser = require('../../controllers/user/getUser');
+const bcrypt = require('bcryptjs');
+
+const util = require('util');
 
 // determine if native or google auth is being requestsed from
     // route accordingly
@@ -28,6 +31,13 @@ const getLoginMode = ({ email, password, tokenId }) => {
 /*
 
 */
+
+const passwordsMatch = async (inputPassword, dbPasswordHash) => {
+    bcrypt.compare = util.promisify(bcrypt.compare);
+    console.log(`Checking if ${inputPassword} matched the hash ${dbPasswordHash}`);
+    const matches = await bcrypt.compare(inputPassword, dbPassword);
+    return matches;
+}
 
 module.exports = async (req, res) => {
     try {
@@ -70,22 +80,25 @@ module.exports = async (req, res) => {
         } else if(LOGIN_MODE==='native_auth') {
 
             // verify password
-            const match = await bcrypt.compare(password, userInRecords.password);
 
-            if(match) {
+            if(passwordsMatch(requestedUser.password, userInRecords.password)) {
                 // save session
+                console.log('Password correct');
                 // send success
                 /*
                 await updateSessionIDs(userInRecords, req.sessionID);
                 // set user on cookie
                 addCookie(req, userInRecords);
+                */
+
                 const id = userInRecords.id;
                 return res.send({ msg: 'Logged in!', id });
-                */
+
             } else {
                 // is incorrect
+                console.log('Password incorrect');
                     // send failed password
-                    // return res.status(401).send(INCORRECT_CRED);
+                    return res.status(401).send(INCORRECT_CRED);
             }
             return res.send('loging in via native auth');
         } else {

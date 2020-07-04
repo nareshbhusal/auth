@@ -24,8 +24,10 @@ services:
       - ./pgadmin:/root/.pgadmin
     ports:
       - '5050:80'
-    logging:
-      driver: none
+    command: 'echo "Set disable_coredump false" >> /etc/sudo.conf' 
+    #sudo: setrlimit(RLIMIT_CORE): Operation not permitted (error fix)
+    #logging:
+      #driver: none
   api:
     build:
       dockerfile: Dockerfile.dev

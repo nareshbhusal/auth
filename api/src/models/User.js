@@ -17,7 +17,7 @@ const user = db.define('user', {
         type: Sequelize.STRING
     },
     auth_system: {
-        type: Sequelize.STRING //`native` or `g_auth`
+        type: Sequelize.STRING //`native_auth` or `g_auth`
     },
     session_ids: {
         type: Sequelize.ARRAY(Sequelize.STRING)
