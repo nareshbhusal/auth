@@ -6,4 +6,6 @@ abstraction, so as to be able to perform everything from the cli
 like login in terms of serial execution, like: validateInput =>
 existingUserCheck => prepareSession
 
+- add password hashing
+
 - memory leaks in node and detecting them

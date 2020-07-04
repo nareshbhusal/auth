@@ -26,7 +26,7 @@ const getSignInMode = ({ fullname, email, password, tokenId }) => {
 const MIN_PASSWORD_LENGTH=6;
 
 const isEmailValid = email => {
-    var re = /\S+@\S+\.\S+/;
+    const re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
 
@@ -51,18 +51,22 @@ module.exports = async (req, res) => {
             // check if password length is appropriate
             return res.status(401).send(PASSWORD_LENTH_ERROR);
         }
-
+        //return res.send('going to check if the user exists for: '+userData.email)
         // check if the email is already in use
         const userInRecords = await getUser({ email: userData.email });
         if (userInRecords) {
             return res.status(409).send({ err: 'Email is already in use' });
         }
+        // return res.send('doesn\'t exist already');
         // attach creation time
-        userData = {
+        const userToCreate = {
             ...userData,
             joined: new Date().getTime()
         }
         // create user
+
+        //return res.send('going to create now');
+
         const phash = await createUser(userData);
         return res.send(phash);
         return res.send('user created successfully');

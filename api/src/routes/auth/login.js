@@ -49,30 +49,30 @@ module.exports = async (req, res) => {
 
 
         // if incorrect login modes used
-        if (LOGIN_MODE==='oauth' && 
+        if (LOGIN_MODE==='oauth' &&
             userInRecords.auth_system==='native') {
 
                 return res.status(401)
                     .send({ err: 'Try login in with email!' });
-            
-        } else if (LOGIN_MODE==='native_auth' && 
+
+        } else if (LOGIN_MODE==='native_auth' &&
             userInRecords.auth_system==='g_auth') {
 
                 return res.status(401)
                     .send({ err: 'Try login in with google!' });
         }
 
-    
+
         if (LOGIN_MODE===OAUTH) {
-            
+
             // login with google auth
             return res.send('loging in via oauth');
         } else if(LOGIN_MODE==='native_auth') {
 
             // verify password
             const match = await bcrypt.compare(password, userInRecords.password);
- 
-            if(match) {                
+
+            if(match) {
                 // save session
                 // send success
                 /*

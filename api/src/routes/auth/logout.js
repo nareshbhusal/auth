@@ -1,4 +1,5 @@
 
+// logout
 module.exports = async (req, res) => {
     try {
         // clear browser cookies
