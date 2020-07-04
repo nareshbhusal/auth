@@ -21,7 +21,7 @@ const createUser = async ({ fullname, email, password, joined, auth_system }) =>
      const createdUser = await User.create({
          fullname,
          email,
-         password: hashedPassword,
+         pass: hashedPassword,
          joined,
          auth_system
      });

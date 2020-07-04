@@ -7,12 +7,12 @@ services:
     env_file: .env
     ports:
       - '5400:5432'
-  stripe:
-    image: 'stripe/stripe-cli'
-    stdin_open: true
-    tty: true
+  #stripe:
+    #image: 'stripe/stripe-cli'
+    #stdin_open: true
+    #tty: true
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:4.22
     links:
       - postgres
     depends_on:
@@ -24,10 +24,10 @@ services:
       - ./pgadmin:/root/.pgadmin
     ports:
       - '5050:80'
-    command: 'echo "Set disable_coredump false" >> /etc/sudo.conf' 
+    #command: 'echo "Set disable_coredump false" >> /etc/sudo.conf' 
     #sudo: setrlimit(RLIMIT_CORE): Operation not permitted (error fix)
-    #logging:
-      #driver: none
+    logging:
+      driver: none
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -37,7 +37,7 @@ services:
     depends_on:
       - postgres
       - redis-server
-      - stripe
+      #- stripe
     volumes:
       - /app/node_modules
       - ./api:/app

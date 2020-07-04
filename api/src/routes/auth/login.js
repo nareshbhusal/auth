@@ -35,7 +35,7 @@ const getLoginMode = ({ email, password, tokenId }) => {
 const passwordsMatch = async (inputPassword, dbPasswordHash) => {
     bcrypt.compare = util.promisify(bcrypt.compare);
     console.log(`Checking if ${inputPassword} matched the hash ${dbPasswordHash}`);
-    const matches = await bcrypt.compare(inputPassword, dbPassword);
+    const matches = await bcrypt.compare(inputPassword, dbPasswordHash);
     return matches;
 }
 
@@ -80,8 +80,9 @@ module.exports = async (req, res) => {
         } else if(LOGIN_MODE==='native_auth') {
 
             // verify password
+            const isPasswordCorrect = await passwordsMatch(requestedUser.password, userInRecords.pass);
 
-            if(passwordsMatch(requestedUser.password, userInRecords.password)) {
+            if(isPasswordCorrect) {
                 // save session
                 console.log('Password correct');
                 // send success
@@ -92,13 +93,12 @@ module.exports = async (req, res) => {
                 */
 
                 const id = userInRecords.id;
-                return res.send({ msg: 'Logged in!', id });
+                return res.send({ msg: 'Logged in!', id: id });
 
             } else {
                 // is incorrect
                 console.log('Password incorrect');
-                    // send failed password
-                    return res.status(401).send(INCORRECT_CRED);
+                return res.status(401).send(INCORRECT_CRED);
             }
             return res.send('loging in via native auth');
         } else {

@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
-
 const user = db.define('user', {
     user_id: {
         type: Sequelize.INTEGER,
@@ -42,14 +41,14 @@ const user = db.define('user', {
 CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
 	fullname VARCHAR(30) DEFAULT '',
-	email VARCHAR(100),
-	pass VARCHAR(26),
+	email VARCHAR(100) NOT NULL,
+	pass VARCHAR(65) NOT NULL,
 	auth_system VARCHAR(10) NOT NULL,
 	session_ids VARCHAR[],
 	last_accessed VARCHAR(50),
 	pass_recovery_blob JSON DEFAULT '{}',
 	sub_type VARCHAR(30),
-	joined VARCHAR(50) NOT NULL
+	joined VARCHAR(15) NOT NULL
 )
 
 */

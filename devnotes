@@ -6,6 +6,6 @@ abstraction, so as to be able to perform everything from the cli
 like login in terms of serial execution, like: validateInput =>
 existingUserCheck => prepareSession
 
-- add password hashing
-
-- memory leaks in node and detecting them
+- storing session data, regular (cache) and for persisting login - how to store? How many session IDs per user to allow at a time?
+To create association with browser agent or ip, or not?
+Oh and, the performance with `isLoggedIn` !!?
