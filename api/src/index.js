@@ -42,14 +42,17 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
     resave: true,
+    httpOnly: true, // don't let javascript access cookies
     cookie: {
-        secure: false,
-        maxAge: 30 * 24 * 60 * 1000 // 30 days
+        secure: true, // prevents mitm by forcing http through tls encryption
+        //maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days //in ms
+        //cookie.maxAge sets a date to expires property, and that
+        //takes dominance over ttl set below
     },
     store: new RedisStore({
-        // host: process.env.REDIS_HOST,
-        // port: '6379', //default
-        client: redisClient
+        client: redisClient,
+        ttl: 60*1, //in seconds
+        //disableTouch: true //prevents resetting ttl on every request
     })
 }));
 
@@ -63,7 +66,7 @@ app.use(expressip().getIpInfoMiddleware);
 app.use(api);
 if (process.env.NODE_ENV==='production'){
     app.use(express.static(path.join(clientPath, 'dist')));
-    
+
     app.get('/*', (req, res)=> {
         return res.sendFile(path.join(clientPath, 'dist/index.html'));
     });

@@ -9,3 +9,32 @@ existingUserCheck => prepareSession
 - storing session data, regular (cache) and for persisting login - how to store? How many session IDs per user to allow at a time?
 To create association with browser agent or ip, or not?
 Oh and, the performance with `isLoggedIn` !!?
+
+--> Set session_id to the cookie (req.cookie) as well. In the session(req.session), store the corresponding user id too. When user
+makes subsequent requests, check the cookie's session_id against the session_id in the redis store.
+Check how to avoid generating a session id before checking for one in the cookies, and setting a session_id at server manually.
+---chances are the above is handled automatically by express-session middleware, confirm by checking persistence on browser restart---
+Also, how to delete expired session data.
+
+Apparently, connect-redis deletes expired session automatically. Verify this by setting ttl to a minute or so and see if it gets
+deleted, test it a couple times.
+
+- Read onetab links for session topic.
+
+- We'll store session id in sql db for the purpose of debugging and such. Still read up on this topic.
+
+- How many session ids or, active client browsers should I support? what is the standard?
+
+- Updating session data on db data update.
+
+- Create editUserData route
+
+- Finish login and register routes with their controllers.
+
+- Add logout, recoverPass, changePassword, etc.
+
+- Rate limiting middleware for requests
+
+- Setting up api to only be accessible from <url>
+
+- Enable HTTPs
