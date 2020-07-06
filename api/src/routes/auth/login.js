@@ -1,4 +1,5 @@
 const updateSessionIDs = require('../../controllers/session/updateSessionIDs');
+const updateLoginSessions = require('../../controllers/session/updateLoginSessions');
 const addCookie = require('../../controllers/session/addCookie');
 const getUser = require('../../controllers/user/getUser');
 const bcrypt = require('bcryptjs');
@@ -83,14 +84,10 @@ module.exports = async (req, res) => {
             const isPasswordCorrect = await passwordsMatch(requestedUser.password, userInRecords.pass);
 
             if(isPasswordCorrect) {
-                // save session
                 console.log('Password correct');
-                // send success
-                /*
-                await updateSessionIDs(userInRecords, req.sessionID);
-                // set user on cookie
-                addCookie(req, userInRecords);
-                */
+
+                // save session
+                await updateLoginSessions(req, userInRecords);
 
                 const id = userInRecords.id;
                 return res.send({ msg: 'Logged in!', id: id });

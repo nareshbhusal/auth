@@ -15,4 +15,11 @@ router.get('/cookie', async (req, res) => {
     return res.send(JSON.stringify(res.cookie));
 });
 
+router.get('/ip', async (req, res) => {
+    //let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let ip = req.ip;
+    return res.send(req.connection.remoteAddress)
+    return res.send(ip);
+});
+
 module.exports = router;

@@ -2,12 +2,12 @@ const updateUser = require('../user/updateUser');
 
 // takes the user fetched from the database freshly,
 // and updates it's session_ids on the database
-// logic -- keep number of session id below 5
+// -- keep number of session id below 5
+
+const MAX_SESSIONS = 4;
 
 const updateSessionIDs = async (user, sessionID) => {
-
-    const MAX_SESSIONS = 4;
-
+    if(!sessionID) throw "No sessionID given to updateSessionIDs"
     let session_ids;
     session_ids = user.session_ids || [];
     console.log('new session_id', sessionID);
@@ -21,12 +21,8 @@ const updateSessionIDs = async (user, sessionID) => {
     }
     console.log('updated session_ids', session_ids);
 
-    try {
-        // save last accessed time as well
-        await updateUser(user.id, { session_ids, last_accessed: new Date().getTime() });
-    } catch(err) {
-        console.log(err);
-    }
+    // save last accessed time as well
+    await updateUser(user.id, { session_ids, last_accessed: new Date().getTime() });
 }
 
 module.exports = updateSessionIDs;

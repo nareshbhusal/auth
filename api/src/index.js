@@ -1,5 +1,4 @@
 const express = require('express');
-const session = require('express-session');
 
 const expressip = require('express-ip');
 const cors = require('cors');
@@ -8,30 +7,16 @@ const app = express();
 const uuid = require('uuid');
 const path = require('path');
 
-// redis
-const redis = require('redis');
+const session = require('express-session');
 
-const redisClient = redis.createClient({
-	host: process.env.REDIS_HOST,
-	port: 6379,
-	auth_pass: process.env.REDIS_PASSWORD
-});
-redisClient.on('connect', () => {
-    console.log('Redis connected!');
-})
-redisClient.on('error', console.error);
-
-
-const RedisStore = require('connect-redis')(session);
-
-
+const sessionStore = require('./store');
 const api = require('./routes');
 
 // configure middlewares
-app.set('trust proxy', true);
+app.set('trust proxy', true); //TODO: what does this do?
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({ credentials: true, origin: true })); // TODO: and this?
 
 console.log('process.env.REDIS_HOST', process.env.REDIS_HOST);
 // setup redis
@@ -44,16 +29,13 @@ app.use(session({
     resave: true,
     httpOnly: true, // don't let javascript access cookies
     cookie: {
-        secure: true, // prevents mitm by forcing http through tls encryption
+        //secure: true, // prevents mitm by forcing http through tls encryption
+        //uncomment above after adding tls
         //maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days //in ms
         //cookie.maxAge sets a date to expires property, and that
-        //takes dominance over ttl set below
+        //takes dominance over store's ttl
     },
-    store: new RedisStore({
-        client: redisClient,
-        ttl: 60*1, //in seconds
-        //disableTouch: true //prevents resetting ttl on every request
-    })
+    store: sessionStore
 }));
 
 // connect with db
