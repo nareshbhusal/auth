@@ -23,12 +23,10 @@ module.exports = async (req, user) => {
 
     const newSessionInfo = {
         sessionID: currentSessionID,
-        ipv4: '>>',
-        ipv6: '>>',
-        loginTime: '',
-        loginTimeReadable: '',
-        geoLocation: '',
-        device: ''
+        ip: req.ip,
+        loginTime: new Date().getTime(),
+        geoLocation: undefined,
+        device: '>>'
     };
 
     let new_login_sessions = [...user.login_sessions];
@@ -37,7 +35,7 @@ module.exports = async (req, user) => {
     new_login_sessions.filter(login_session => {
         return isSessionAlive(login_session.sessionID);
     });
-
+    // add new session
     new_login_sessions.unshift(newSessionInfo);
     // If number of browsers exceeds MAX_SESSIONS
     if (new_login_sessions.length > MAX_SESSIONS) {

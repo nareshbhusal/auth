@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
          }
 
 
-        // if incorrect login modes used
+        // if incorrect login mode used
         if (LOGIN_MODE==='oauth' &&
             userInRecords.auth_system==='native') {
 
@@ -76,34 +76,31 @@ module.exports = async (req, res) => {
 
         if (LOGIN_MODE===OAUTH) {
 
-            // login with google auth
+            // TODO: login with google auth
+
+            // save session
+            await updateLoginSessions(req, userInRecords);
+
             return res.send('loging in via oauth');
         } else if(LOGIN_MODE==='native_auth') {
 
             // verify password
             const isPasswordCorrect = await passwordsMatch(requestedUser.password, userInRecords.pass);
 
-            if(isPasswordCorrect) {
-                console.log('Password correct');
-
-                // save session
-                await updateLoginSessions(req, userInRecords);
-
-                const id = userInRecords.id;
-                return res.send({ msg: 'Logged in!', id: id });
-
-            } else {
-                // is incorrect
-                console.log('Password incorrect');
+            if(!isPasswordCorrect) {
                 return res.status(401).send(INCORRECT_CRED);
             }
-            return res.send('loging in via native auth');
-        } else {
-            throw 'something is wrong lol, LOGIN_MODE: '+LOGIN_MODE
+
+            // save session
+            await updateLoginSessions(req, userInRecords);
+            return res.send('logged in via native auth');
         }
+
+
+        throw 'something is wrong lol, LOGIN_MODE: '+LOGIN_MODE
 
     } catch(err) {
         console.log(err);
-        res.send('500 error');
+        return res.status(500).send('500 error');
     }
 }

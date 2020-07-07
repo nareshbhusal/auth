@@ -5,6 +5,9 @@ const NATIVE_AUTH='native_auth';
 const OAUTH='oauth';
 const INSUFFICIENT_INFO='insufficient';
 
+const isEmailValid = require('../../utils/isEmailValid');
+const isPassFormatValid = require('../../utils/isPasswordFormatValid');
+
 // error responses
 const INSUFFICIENT_INFO_ERROR='Please fill in all fields, insufficient data';
 const INCORRECT_CRED = { err: 'Wrong password or email!' };
@@ -18,17 +21,10 @@ const getSignInMode = ({ fullname, email, password, tokenId }) => {
         return NATIVE_AUTH;
     } else if (tokenId) {
         return OAUTH;
-    } else {
-        return INSUFFICIENT_INFO;
     }
+    return INSUFFICIENT_INFO;
 }
 
-const MIN_PASSWORD_LENGTH=6;
-
-const isEmailValid = email => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
 module.exports = async (req, res) => {
     try {
@@ -47,26 +43,30 @@ module.exports = async (req, res) => {
         // check if email is valid (regex or some library maybe)
         if (!isEmailValid(userData.email)) {
             return res.status(401).send(EMAIL_VALIDITY_ERROR)
-        } else if (userData.password.length < MIN_PASSWORD_LENGTH) {
+        } else if (isPassFormatValid(userData.password)) {
             // check if password length is appropriate
             return res.status(401).send(PASSWORD_LENTH_ERROR);
         }
-        //return res.send('going to check if the user exists for: '+userData.email)
         // check if the email is already in use
         const userInRecords = await getUser({ email: userData.email });
         if (userInRecords) {
             return res.status(409).send({ err: 'Email is already in use' });
         }
-        // return res.send('doesn\'t exist already');
-        // attach creation time
+        // doesn't exist already
+
         const userToCreate = {
             ...userData,
-            auth_system: 'native_auth',
             joined: new Date().getTime()
         }
-        // create user
+        // Create user
+        if (SIGNIN_MODE===NATIVE_AUTH) {
+            userToCreate.auth_system = NATIVE_AUTH;
 
-        //return res.send('going to create now');
+        } else if (SIGNIN_MODE===OAUTH) {
+            userToCreate.auth_system = OAUTH;
+            // TODO: Implement google auth
+        }
+
 
         const createdUser = await createUser(userToCreate);
         console.log(createdUser);

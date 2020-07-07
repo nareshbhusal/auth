@@ -12,11 +12,16 @@ const session = require('express-session');
 const sessionStore = require('./store');
 const api = require('./routes');
 
+const device = require('express-device');
+
 // configure middlewares
 app.set('trust proxy', true); //TODO: what does this do?
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: true })); // TODO: and this?
+
+app.use(device.capture());
+
 
 console.log('process.env.REDIS_HOST', process.env.REDIS_HOST);
 // setup redis

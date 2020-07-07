@@ -1,5 +1,4 @@
 const updateSessionIDs = require('../../controllers/session/updateSessionIDs');
-const addCookie = require('../../controllers/session/addCookie');
 const getUser = require('../../controllers/user/getUser');
 
 const { auth } = require('google-auth-library');
@@ -13,11 +12,11 @@ const googleAuth = async(req, res) => {
 
         const response = await client.verifyIdToken({ idToken: tokenId });
         const userData = response.getPayload();
-        
+
         console.log(userData);
-        
+
         return res.send({msg: 'What!?'});
-        
+
     } catch(err) {
         console.log(err);
         return res.status(500).send({err: 'Something went wrong logging in!'})
