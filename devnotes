@@ -38,3 +38,11 @@ deleted, test it a couple times.
 - Setting up api to only be accessible from <url>
 
 - Enable HTTPs
+
+- Updating session data as db changes is cool but what now when i have multiple sessions for single user
+Maybe something like sharing session data for different sessionIDs would be great
+
+- Vim
+Create a file while in vim
+Expirement with different vim colorschemes
+Looking up definition from whatever plugin i installed 

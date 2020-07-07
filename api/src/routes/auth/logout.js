@@ -2,13 +2,7 @@ const User = require('../../models/User');
 const getUser = require('../../controllers/user/getUser');
 const updateUser = require('../../controllers/user/updateUser');
 
-const deleteSessionFromRedis = (session_to_delete) => {
-
-    store.destroy(session_to_delete, (err)=> {
-        console.error('Failed to delete session: '+sessionID);
-        throw err;
-    });
-}
+const deleteSessionFromRedis = require('../../controllers/session/deleteSessionFromRedis');
 
 const deleteUserSession = async (userId, sessionID, toDeleteAll) => {
 
