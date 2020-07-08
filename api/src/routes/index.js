@@ -3,8 +3,6 @@ const router = require('express').Router();
 const authRouter = require('./auth');
 const userRouter = require('./user');
 
-// const geoip = require('geoip-lite');
-
 
 router.get('/', async (req, res) => {
     return res.send('Server is running but under construction')
@@ -30,15 +28,10 @@ router.get('/session/:id', async (req, res) => {
 });
 
 router.get('/ip', async (req, res) => {
-    //let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     let ip = req.ip;
-    const geo = geoip.lookup(ip);
 
-
-    //return res.send(req.connection.remoteAddress)
     return res.send({
         ip: req.ip,
-        geo: geo
     });
 });
 

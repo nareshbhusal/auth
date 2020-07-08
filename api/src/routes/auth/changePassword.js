@@ -1,51 +1,42 @@
 const updateUser = require("../../controllers/user/updateUser");
-const getUser = require("../../controllers/user/getUser");
 
-const recoveryWindowPassed = require('../../controllers/user/recoveryWindowPassed');
+const PasswordResetTicket = require('../../models/PasswordResetTicket');
+const getTicket = require('../../controllers/resetTicket/getTicket');
 
 const isPassFormatValid = require('../../utils/isPasswordFormatValid');
 
-const isHashValid = (user_sent_hash, userInRecords) => {
-    const { pass_recovery_blob } = userInRecords;
-    const { hash } = pass_recovery_blob;
-    console.log(!!hash, hash==user_sent_hash, !recoveryWindowPassed(pass_recovery_blob))
-
-    return hash && hash==incoming_hash && !recoveryWindowPassed(pass_recovery_blob);
-}
+const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
 
 const changePassword = async(req, res) => {
-    const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
 
     try {
-        const { hash, password } = req.body;
-        // TODO: THERE IS NO SESSION ID WHEN USER IS LOGGED OUT
-        //const userId = req.session.userId;
+        const { token, genTime, password, email, user_id } = req.body;
 
         if (!isPassFormatValid(password)) {
             return res.status(409).send(passLengthError);
         }
-        const email = hash.slice(44,);
 
-        const userInRecords = await getUser({ email: email });
-
-        if (userInRecords) {
-            const { id, pass_recovery_blob } = userInRecords;
-            const newPass_recovery_blob = {
-                ...pass_recovery_blob,
-                hash: '',
-                genTime: ''
-            }
-
-            if(isHashValid(hash, userInRecords.pass_recovery_blob)) {
-                console.log('Recovery hash is valid');
-                // update password
-                await updateUser(id, { pass: password, pass_recovery_blob: newPass_recovery_blob });
-                return res.send({ msg: 'Password changed successfully!', id });
-            }
-            return res.status(400).send({ err: "Recovery token isn't present or expired." });
+        const ticketInRecords = await getTicket({ token, genTime });
+        if (!ticketInRecords) {
+            return res.status(409).send({ msg: "This reset link is not valid" });
         }
-        // unexpected email error, abort
-        return res.status(422).send({ err: 'Unknown issue. Please contact support!' });
+        // check if it has expired
+        if (ticketInRecords.expirationTime< new Date().getTime()) {
+            // expired
+            return res.status(401).send({ msg: "This reset key is no longer valid" });
+        }
+
+        // update password
+        await updateUser(ticketInRecords.user_id, { password });
+        // set ticket tokenUsed status
+        await PasswordResetTicket.update(
+            { tokenUsed: true },
+            {
+                where: { genTime, user_id }
+            }
+        );
+        return res.send({ msg: 'Password changed successfully!', id });
+
     } catch(err) {
         console.log(err);
         return res.status(500).send({ err: 'Server error changing password!' });

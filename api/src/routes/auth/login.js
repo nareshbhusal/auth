@@ -1,5 +1,5 @@
 const updateSessionIDs = require('../../controllers/session/updateSessionIDs');
-const updateLoginSessions = require('../../controllers/session/updateLoginSessions');
+const addLoginSession = require('../../controllers/session/updateLoginSessions');
 const addCookie = require('../../controllers/session/addCookie');
 const getUser = require('../../controllers/user/getUser');
 const bcrypt = require('bcryptjs');
@@ -42,15 +42,20 @@ const passwordsMatch = async (inputPassword, dbPasswordHash) => {
 
 module.exports = async (req, res) => {
     try {
-        const requestedUser = req.body;
+        let requestedUser = req.body;
+        const { accessToken, tokenId } = req.body;
 
         // determine login mode
         let LOGIN_MODE = getLoginMode(requestedUser);
+        console.log(LOGIN_MODE);
 
         if (LOGIN_MODE===INSUFFICIENT_INFO) {
             return res.status(422).send(INSUFFICIENT_INFO_ERROR);
         }
 
+        if (LOGIN_MODE===OAUTH) {
+            requestedUser = await googleAuth({ accessToken, tokenId });
+        }
         // check if requestedUser exists
         const userInRecords = await getUser({email: requestedUser.email});
          if (!userInRecords) {
@@ -60,44 +65,31 @@ module.exports = async (req, res) => {
 
 
         // if incorrect login mode used
-        if (LOGIN_MODE==='oauth' &&
-            userInRecords.auth_system==='native') {
+        if (LOGIN_MODE===OAUTH &&
+            userInRecords.auth_system===NATIVE) {
 
                 return res.status(401)
                     .send({ err: 'Try login in with email!' });
 
-        } else if (LOGIN_MODE==='native_auth' &&
-            userInRecords.auth_system==='g_auth') {
+        } else if (LOGIN_MODE===NATIVE &&
+            userInRecords.auth_system===OAUTH) {
 
                 return res.status(401)
                     .send({ err: 'Try login in with google!' });
         }
 
 
-        if (LOGIN_MODE===OAUTH) {
-
-            // TODO: login with google auth
-
-            // save session
-            await updateLoginSessions(req, userInRecords);
-
-            return res.send('loging in via oauth');
-        } else if(LOGIN_MODE==='native_auth') {
-
+        if(LOGIN_MODE===NATIVE_AUTH) {
             // verify password
             const isPasswordCorrect = await passwordsMatch(requestedUser.password, userInRecords.pass);
 
-            if(!isPasswordCorrect) {
-                return res.status(401).send(INCORRECT_CRED);
-            }
-
-            // save session
-            await updateLoginSessions(req, userInRecords);
-            return res.send('logged in via native auth');
+            if(!isPasswordCorrect) return res.status(401).send(INCORRECT_CRED);
         }
 
+        // save session
+        await addLoginSession(req, userInRecords);
 
-        throw 'something is wrong lol, LOGIN_MODE: '+LOGIN_MODE
+        return res.send(`logged in via ${LOGIN_MODE}`);
 
     } catch(err) {
         console.log(err);

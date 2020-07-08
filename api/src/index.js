@@ -1,6 +1,5 @@
 const express = require('express');
 
-const expressip = require('express-ip');
 const cors = require('cors');
 const db = require('./config/database');
 const app = express();
@@ -15,15 +14,14 @@ const api = require('./routes');
 const device = require('express-device');
 
 // configure middlewares
+app.use(cors({ credentials: true, origin: true })); // TODO: and this?
 app.set('trust proxy', true); //TODO: what does this do?
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: true })); // TODO: and this?
 
 app.use(device.capture());
 
 
-console.log('process.env.REDIS_HOST', process.env.REDIS_HOST);
 // setup redis
 app.use(session({
     genid: function(req) {
@@ -48,7 +46,6 @@ db.authenticate()
 .then(() => console.log('DATABASE CONNECTED!'))
 .catch(err => console.log('DATABASE AUTHENTICATION FAILED!', err));
 
-app.use(expressip().getIpInfoMiddleware);
 
 app.use(api);
 if (process.env.NODE_ENV==='production'){

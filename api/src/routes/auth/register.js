@@ -1,6 +1,8 @@
 const getUser = require('../../controllers/user/getUser');
 const createUser = require('../../controllers/user/createUser');
 
+const googleAuth = require('../../controllers/user/googleAuth');
+
 const NATIVE_AUTH='native_auth';
 const OAUTH='oauth';
 const INSUFFICIENT_INFO='insufficient';
@@ -25,28 +27,17 @@ const getSignInMode = ({ fullname, email, password, tokenId }) => {
     return INSUFFICIENT_INFO;
 }
 
-
 module.exports = async (req, res) => {
     try {
 
         let userData = req.body;
-        //return res.send('register route');
         // determine login mode
         let SIGNIN_MODE = getSignInMode(userData);
 
-        // check if email and password are given
         if (SIGNIN_MODE===INSUFFICIENT_INFO) {
             return res.status(422).send(INSUFFICIENT_INFO_ERROR);
         }
 
-
-        // check if email is valid (regex or some library maybe)
-        if (!isEmailValid(userData.email)) {
-            return res.status(401).send(EMAIL_VALIDITY_ERROR)
-        } else if (isPassFormatValid(userData.password)) {
-            // check if password length is appropriate
-            return res.status(401).send(PASSWORD_LENTH_ERROR);
-        }
         // check if the email is already in use
         const userInRecords = await getUser({ email: userData.email });
         if (userInRecords) {
@@ -58,25 +49,31 @@ module.exports = async (req, res) => {
             ...userData,
             joined: new Date().getTime()
         }
-        // Create user
-        if (SIGNIN_MODE===NATIVE_AUTH) {
-            userToCreate.auth_system = NATIVE_AUTH;
 
-        } else if (SIGNIN_MODE===OAUTH) {
+        if (SIGNIN_MODE===OAUTH) {
+            userToCreate.userData = await googleAuth({ accessToken, tokenId });
             userToCreate.auth_system = OAUTH;
-            // TODO: Implement google auth
+        }
+        if (SIGNIN_MODE===NATIVE_AUTH) {
+
+            // check if email is valid
+            if (!isEmailValid(userData.email)) {
+                return res.status(401).send(EMAIL_VALIDITY_ERROR)
+            } else if (isPassFormatValid(userData.password)) {
+                // check if password length is appropriate
+                return res.status(401).send(PASSWORD_LENTH_ERROR);
+            }
+
+            userToCreate.auth_system = NATIVE_AUTH;
         }
 
-
+        // create user
         const createdUser = await createUser(userToCreate);
-        console.log(createdUser);
-        return res.send('user created successfully');
-
 
         // save session
+        await updateLoginSessions(req, createdUser);
 
-        // save cookie
-        return res.send('registered');
+        return res.send('user created successfully');
 
     } catch(err) {
         console.log(err);
