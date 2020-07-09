@@ -2,7 +2,7 @@ const PasswordResetTicket = require('../../models/PasswordResetTickets');
 const uuid = require('uuid');
 const getHashedData = require('../../utils/getHashedData');
 
-const createResetTicket = async (user_id, emailSent=true) => {
+const createResetTicket = async ({user_id, emailSent=true, ip}) => {
     const TICKET_LIFE=21; // 20 minutes
     const genTime = new Date().getTime().toString();
     let expirationTime = new Date();
@@ -18,7 +18,8 @@ const createResetTicket = async (user_id, emailSent=true) => {
         genTime,
         expirationTime,
         tokenUsed: false,
-        emailSent
+        emailSent,
+        ip
     });
     return token;
 }

@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const authRouter = require('./auth');
 const userRouter = require('./user');
-
+const UAParser = require('ua-parser-js');
 
 router.get('/', async (req, res) => {
     return res.send('Server is running but under construction')
@@ -27,11 +27,14 @@ router.get('/session/:id', async (req, res) => {
     });
 });
 
+
 router.get('/ip', async (req, res) => {
     let ip = req.ip;
 
     return res.send({
         ip: req.ip,
+        //device: req.device,
+        ua: req.useragent
     });
 });
 

@@ -19,14 +19,15 @@ module.exports = async (req, user) => {
 
     const currentSessionID = req.sessionID;
 
-    // TODO: get all the information
+    const { browser, os } = req.useragent;
 
     const newSessionInfo = {
         sessionID: currentSessionID,
         ip: req.ip,
         loginTime: new Date().getTime(),
         geoLocation: undefined,
-        device: '>>'
+        browser,
+        os
     };
 
     let new_login_sessions = [...user.login_sessions];

@@ -12,6 +12,9 @@ const user = db.define('user', {
     email: {
         type: Sequelize.STRING
     },
+    photo: {
+        type: Sequelize.STRING
+    },
     pass: {
         type: Sequelize.STRING
     },
@@ -42,6 +45,7 @@ CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
 	fullname VARCHAR(30) DEFAULT '',
 	email VARCHAR(100) NOT NULL,
+    photo VARCHAR(255) NOT NULL,
 	pass VARCHAR(65) NOT NULL,
 	auth_system VARCHAR(10) NOT NULL,
 	//session_ids VARCHAR[],

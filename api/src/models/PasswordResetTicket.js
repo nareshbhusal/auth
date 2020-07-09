@@ -20,6 +20,9 @@ const PasswordResetTicket = db.define({
     },
     emailSent: {
         type: Sequelize.BOOLEAN
+    },
+    ip: {
+        type: Sequelize.STRING
     }
 });
 
@@ -34,7 +37,8 @@ module.exports = PasswordResetTicket;
     genTime varchar(15) NOT NULL,
 	expirationTime varchar(15) NOT NULL,
     tokenUsed boolean NOT NULL,
-	emailSent boolean NOT NULL
+	emailSent boolean NOT NULL,
+    ip VARCHAR(50)
 )
  *
  */

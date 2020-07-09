@@ -12,6 +12,8 @@ const sessionStore = require('./store');
 const api = require('./routes');
 
 const device = require('express-device');
+const useragent = require('express-useragent');
+
 
 // configure middlewares
 app.use(cors({ credentials: true, origin: true })); // TODO: and this?
@@ -20,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(device.capture());
+app.use(useragent.express());
 
 
 // setup redis
