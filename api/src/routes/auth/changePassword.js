@@ -5,6 +5,7 @@ const getTicket = require('../../controllers/resetTicket/getTicket');
 
 const isPassFormatValid = require('../../utils/isPasswordFormatValid');
 
+const minPassLength=6;
 const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
 
 const changePassword = async(req, res) => {

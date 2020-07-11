@@ -1,4 +1,5 @@
-// logout
+const deleteUserSession = require('../../controllers/session/deleteUserSession');
+
 module.exports = async (req, res) => {
     try {
         const user_id = req.session.user_id;

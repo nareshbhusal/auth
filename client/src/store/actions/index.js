@@ -3,6 +3,7 @@ import api from '../../api';
 import parseServerError from '../../utils/parseServerError';
 
 export const userLogin = ({ email, password, accessToken, tokenId }) => async (dispatch) => {
+    console.log({ email, password, accessToken, tokenId });
     try {
         const res = await api.post('login', {
             email,
@@ -25,6 +26,7 @@ export const userLogin = ({ email, password, accessToken, tokenId }) => async (d
 }
 
 export const userRegister = ({ name, email, password, accessToken, tokenId }) => async (dispatch) => {
+    console.log({ name, email, password, accessToken, tokenId });
     try {
         const res = await api.post('register', {
             name,
@@ -76,13 +78,13 @@ export const updateUserData = (updatedData) => async dispatch => {
         console.log('updating user data', updatedData);
         const res = await api.put('userdata', { updatedData });
         const data = res.data.msg;
-        
+
         console.log(data);
 
         console.log('refetching userData');
         dispatch(fetchUserData());
         return { msg: data.msg };
-        
+
     } catch(err) {
         console.log(err);
         err = parseServerError(err);

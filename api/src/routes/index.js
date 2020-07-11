@@ -2,7 +2,6 @@ const router = require('express').Router();
 
 const authRouter = require('./auth');
 const userRouter = require('./user');
-const UAParser = require('ua-parser-js');
 
 router.get('/', async (req, res) => {
     return res.send('Server is running but under construction')

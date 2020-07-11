@@ -11,7 +11,6 @@ const session = require('express-session');
 const sessionStore = require('./store');
 const api = require('./routes');
 
-const device = require('express-device');
 const useragent = require('express-useragent');
 
 
@@ -21,7 +20,6 @@ app.set('trust proxy', true); //TODO: what does this do?
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(device.capture());
 app.use(useragent.express());
 
 

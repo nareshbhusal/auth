@@ -1,4 +1,4 @@
-const PasswordResetTicket = require('../../models/PasswordResetTickets');
+const PasswordResetTicket = require('../../models/PasswordResetTicket');
 const uuid = require('uuid');
 const getHashedData = require('../../utils/getHashedData');
 

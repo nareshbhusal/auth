@@ -19,7 +19,7 @@ const GoogleAuth = ({ buttonText, callback }) => {
     const onFailure = error => {
         alert(error);
     }
-
+	//console.log(client_id);
     return (
         <div className={styles.container}>
             <GoogleLogin

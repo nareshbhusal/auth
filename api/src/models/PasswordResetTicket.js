@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
 
-const PasswordResetTicket = db.define({
+const PasswordResetTicket = db.define('passwordresetticket', {
     user_id: {
         type: Sequelize.INTEGER
     },
