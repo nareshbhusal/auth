@@ -4,34 +4,21 @@ const isLoggedIn = async(req) => {
 
     if (!req.session) {
         return false;
-    } else if(!req.session.user){
-        return false;
-    } else if(!req.session.user.id) {
+    } else if(!req.session.user_id) {
         return false;
     }
-    // pull user corresponding to the cookie saved 
-    const id = req.session.user.id;
-    
-    const user = await getUser({ id });
+    return true;
 
-    // Check if the userid and sessionID in session match the ones in DB
-    if (user) {
-        // console.log(req.sessionID, 'against',user.session_ids);
-        const isAuthorized = user.session_ids.some(session_id => {
-            return session_id === req.sessionID
-        });
-        // console.log(isAuthorized);
-        if (isAuthorized) {
-            return true;
-        }
-    }
+    // -- Overkill
+    // pull user corresponding to the cookie saved
+    // check sessionID against db
+
     // clear the browser session
-    req.session.destroy((err) => {
-        if(err) {
-            console.log(err);
-        }
-    });
-    return false;
+  //  req.session.destroy((err) => {
+  //      if(err) {
+  //          console.log(err);
+  //      }
+  //  });
 }
 
 module.exports = isLoggedIn;
