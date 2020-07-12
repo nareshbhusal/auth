@@ -2,7 +2,7 @@ const User = require('../../models/User');
 const getHashedData = require('../../utils/getHashedData');
 
 
-const createUser = async ({ fullname, email, password, joined, auth_system }) => {
+const createUser = async ({ fullname, email, password, joined, auth_system, photo }) => {
 
     console.log('NOW CREATING USER');
 
@@ -13,8 +13,10 @@ const createUser = async ({ fullname, email, password, joined, auth_system }) =>
         fullname,
         email,
         pass: hashedPassword,
+        login_sessions: [],
         joined,
-        auth_system
+        auth_system,
+        photo,
     });
     return createdUser;
 }

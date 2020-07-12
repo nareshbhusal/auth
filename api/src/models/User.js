@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
+
 const user = db.define('user', {
     user_id: {
         type: Sequelize.INTEGER,
@@ -20,6 +21,9 @@ const user = db.define('user', {
     },
     auth_system: {
         type: Sequelize.STRING //`native_auth` or `g_auth`
+    },
+    login_sessions: {
+        type: Sequelize.ARRAY(Sequelize.JSON)
     },
     session_ids: {
         type: Sequelize.ARRAY(Sequelize.STRING)

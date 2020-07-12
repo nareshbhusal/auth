@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
 
         const fromAll = req.body.fromAll; // if to logout from all devices
 
-        await deleteUserSession(userId, currentSessionID, fromAll);
+        await deleteUserSession(user_id, currentSessionID, fromAll);
 
         return res.status(200).send('logout success!')
     } catch(err) {

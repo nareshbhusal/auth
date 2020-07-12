@@ -71,7 +71,7 @@ module.exports = async (req, res) => {
                 return res.status(401)
                     .send({ err: 'Try login in with email!' });
 
-        } else if (LOGIN_MODE===NATIVE &&
+        } else if (LOGIN_MODE===NATIVE_AUTH &&
             userInRecords.auth_system===OAUTH) {
 
                 return res.status(401)

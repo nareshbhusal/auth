@@ -1,4 +1,4 @@
-const getUser = require('../../models/User');
+const getUser = require('../../controllers/user/getUser');
 const updateUser = require('../../controllers/user/updateUser');
 const deleteUserSession = require('../session/deleteUserSession');
 

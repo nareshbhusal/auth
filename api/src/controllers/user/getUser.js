@@ -4,12 +4,13 @@ const User = require('../../models/User');
 
 const getUser = async userData => {
 	console.log('getting user from db');
+    console.log(userData);
     const userInRecords = await User.findOne({
         where: {
             ...userData
         }
     });
-    console.log(userInRecords);
+    //console.log(userInRecords);
     return userInRecords;
 }
 

@@ -20,6 +20,7 @@ module.exports = {
     filename: '[name].js'
   },
   target: 'node',
+
   node: {
     // Need this when working with express, otherwise the build fails
     __dirname: false,

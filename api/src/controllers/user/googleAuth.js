@@ -4,7 +4,7 @@ const authClient = auth.fromAPIKey("367830743096-1kekcsp2u216kna860tde6s39h27t0c
 const googleAuth = async ({ accessToken, tokenId }) => {
     const response = await authClient.verifyIdToken({ idToken: tokenId });
     const { email, name, picture } = response.getPayload();
-    const userData = { email, name, picture };
+    const userData = { email, name, photo: picture.slice(0,254) };
     return userData;
 }
 

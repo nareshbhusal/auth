@@ -12,13 +12,12 @@ const MAX_SESSIONS=4; //use common variable for this and for redis sessions
 
 
 const updateSessionData = async (req, userInRecords) => {
-    req.session.userId = userInRecords.id; // just userId for now
+    req.session.user_id = userInRecords.user_id; // just userId for now
 }
 
 module.exports = async (req, user) => {
 
     const currentSessionID = req.sessionID;
-
     const { browser, os } = req.useragent;
 
     const newSessionInfo = {
@@ -46,7 +45,7 @@ module.exports = async (req, user) => {
         //delete from redis
         deleteSessionFromRedis(session_to_delete);
     }
-    await updateSessionData(req, userInRecords);
+    await updateSessionData(req, user);
 
-    await updateUser(user.id, { login_sessions: new_login_sessions });
+    await updateUser(user.user_id, { login_sessions: new_login_sessions });
 }

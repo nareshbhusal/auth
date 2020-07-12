@@ -2,6 +2,7 @@ const getUser = require('../../controllers/user/getUser');
 const createUser = require('../../controllers/user/createUser');
 
 const googleAuth = require('../../controllers/user/googleAuth');
+const updateLoginSession = require('../../controllers/session/updateLoginSessions');
 
 const NATIVE_AUTH='native_auth';
 const OAUTH='oauth';
@@ -59,7 +60,7 @@ module.exports = async (req, res) => {
             // check if email is valid
             if (!isEmailValid(userData.email)) {
                 return res.status(401).send(EMAIL_VALIDITY_ERROR)
-            } else if (isPassFormatValid(userData.password)) {
+            } else if (!isPassFormatValid(userData.password)) {
                 // check if password length is appropriate
                 return res.status(401).send(PASSWORD_LENTH_ERROR);
             }
@@ -71,7 +72,7 @@ module.exports = async (req, res) => {
         const createdUser = await createUser(userToCreate);
 
         // save session
-        await updateLoginSessions(req, createdUser);
+        await updateLoginSession(req, createdUser);
 
         return res.send('user created successfully');
 

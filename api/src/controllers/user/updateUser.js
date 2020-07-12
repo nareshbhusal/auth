@@ -5,7 +5,8 @@ const getHashedData = require('../../utils/getHashedData');
 
 const updateUser = async (user_id, dataToUpdate) => {
     delete dataToUpdate.user_id;
-
+    console.log('UPDATING USER');
+    console.log(user_id);
     // selectively hash password
     const password = dataToUpdate.pass;
     if (password) {
