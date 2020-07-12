@@ -3,8 +3,8 @@ const updateUser = require('../../controllers/user/updateUser');
 module.exports = async (req, res, next) => {
     try {
         const { fullname, email, password } = req.body;
-        if (!fullname, email) return res.status(401).send('nothing changed');
-        const userId = req.session.userId;
+        if (!fullname && !email && !password) return res.status(401).send('nothing changed');
+        const user_id = req.session.user_id;
 
         let newUserData = {};
 
@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
         if(email) newUserData.email=email;
         if(password) newUserData.pass=password;
 
-        await updateUser(userId, newUserData);
+        await updateUser(user_id, newUserData);
         res.send('user updated');
         next();
 
