@@ -1,6 +1,6 @@
 const updateUser = require('../../controllers/user/updateUser');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
     try {
         const { fullname, email, password } = req.body;
         if (!fullname, email) return res.status(401).send('nothing changed');
@@ -13,7 +13,9 @@ module.exports = async (req, res) => {
         if(password) newUserData.pass=password;
 
         await updateUser(userId, newUserData);
-        return res.send('user updated');
+        res.send('user updated');
+        next();
+
     } catch(err) {
         console.log(err);
         return res.status(500).send('server error');

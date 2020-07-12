@@ -16,6 +16,7 @@ const requireLogin = async (req, res, next) => {
         } else {
             return res.status(403).send(authError);
         }
+        next();
     } catch(err) {
         console.log(err)
         return res.status(500).send(serverError);

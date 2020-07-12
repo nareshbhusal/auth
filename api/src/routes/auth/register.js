@@ -28,7 +28,7 @@ const getSignInMode = ({ fullname, email, password, tokenId }) => {
     return INSUFFICIENT_INFO;
 }
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
     try {
 
         let userData = req.body;
@@ -74,7 +74,8 @@ module.exports = async (req, res) => {
         // save session
         await updateLoginSession(req, createdUser);
 
-        return res.send('user created successfully');
+        res.send('user created successfully');
+        next();
 
     } catch(err) {
         console.log(err);

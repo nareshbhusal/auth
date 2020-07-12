@@ -8,7 +8,7 @@ const isPassFormatValid = require('../../utils/isPasswordFormatValid');
 const minPassLength=6;
 const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
 
-const changePassword = async(req, res) => {
+const changePassword = async(req, res, next) => {
 
     try {
         const { token, genTime, password, email, user_id } = req.body;
@@ -36,7 +36,8 @@ const changePassword = async(req, res) => {
                 where: { genTime, user_id }
             }
         );
-        return res.send({ msg: 'Password changed successfully!', id });
+        res.send({ msg: 'Password changed successfully!', id });
+        next();
 
     } catch(err) {
         console.log(err);

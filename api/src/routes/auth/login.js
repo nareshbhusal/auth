@@ -40,7 +40,7 @@ const passwordsMatch = async (inputPassword, dbPasswordHash) => {
     return matches;
 }
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
     try {
         let requestedUser = req.body;
         const { accessToken, tokenId } = req.body;
@@ -89,7 +89,8 @@ module.exports = async (req, res) => {
         // save session
         await addLoginSession(req, userInRecords);
 
-        return res.send(`logged in via ${LOGIN_MODE}`);
+        res.send(`logged in via ${LOGIN_MODE}`);
+        next();
 
     } catch(err) {
         console.log(err);

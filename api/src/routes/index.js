@@ -11,11 +11,7 @@ router.use('/', authRouter);
 router.use('/user', userRouter);
 
 router.get('/session', async (req, res) => {
-    if (req.session){
-        return res.send(req.session.user_id);
-        return res.send({...req.session, sessionID: req.sessionID, user_id: req.session.user_id });
-    }
-    return res.send({...req.session, sessionID: req.sessionID});
+    return res.send({...req.session, sessionID: req.sessionID, user_id: req.session.user_id, last_accessed: req.session.last_accessed });
 });
 
 router.get('/cookie', async (req, res) => {

@@ -1,11 +1,12 @@
 const deleteUser = require('../../controllers/user/deleteUser');
 
 //delete user
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
     try {
         const user_id = req.session.user_id;
         await deleteUser(user_id);
-        return res.send('User deleted!');
+        res.send('User deleted!');
+        next();
 
     } catch(err) {
         console.log(err)

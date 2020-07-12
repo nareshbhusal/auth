@@ -10,7 +10,7 @@ const isEligibleForResetTicket = (user_id) => {
 const SUCCESS_MESSAGE="Thanks, if the email address you entered is correct, you will be receiving an email shortly with instructions on how to reset your password";
 
 
-const recoverPassword = async(req, res) => {
+const recoverPassword = async(req, res, next) => {
 
     try {
         const { email } = req.body;
@@ -32,7 +32,8 @@ const recoverPassword = async(req, res) => {
                 genTime:ticket.genTime, auth_system
             });
         }
-        return res.status(200).send({ msg: SUCCESS_MESSAGE });
+        res.status(200).send({ msg: SUCCESS_MESSAGE });
+        next();
 
     } catch(err) {
         console.log(err);
