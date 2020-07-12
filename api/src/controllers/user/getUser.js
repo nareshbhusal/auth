@@ -10,9 +10,9 @@ const getUser = async userData => {
             ...userData
         }
     });
-    if(userInRecords){
-        if (userInRecords.deleted) return null;
-    }
+   // if(userInRecords){
+   //     if (userInRecords.deleted) return null;
+   // }
     //console.log(userInRecords);
     return userInRecords;
 }

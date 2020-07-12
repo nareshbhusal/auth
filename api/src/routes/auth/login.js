@@ -62,6 +62,11 @@ module.exports = async (req, res, next) => {
             return res.status(401)
                 .send({ err: 'Wrong password or email!' });
          }
+        if (userInRecords.deleted) {
+            // if user is deleted
+            return res.status(401)
+                .send({ err: 'Wrong password or email' });
+        }
 
 
         // if incorrect login mode used

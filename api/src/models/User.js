@@ -55,12 +55,12 @@ CREATE TABLE users (
     photo VARCHAR(255) NOT NULL,
 	pass VARCHAR(65) NOT NULL,
 	auth_system VARCHAR(10) NOT NULL,
-	//session_ids VARCHAR[],
 	login_sessions JSON[] NOT NULL,
 	last_accessed VARCHAR(50),
-	pass_recovery_blob JSON[] DEFAULT '{}',
+	//pass_recovery_blob JSON[] DEFAULT '{}',
 	sub_type VARCHAR(30),
-	joined VARCHAR(15) NOT NULL
+	joined VARCHAR(15) NOT NULL,
+    deleted BOOLEAN default false
 )
 
 */
