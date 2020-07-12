@@ -3,6 +3,7 @@ const createUser = require('../../controllers/user/createUser');
 
 const googleAuth = require('../../controllers/user/googleAuth');
 const updateLoginSession = require('../../controllers/session/updateLoginSessions');
+const ErrorHandler = require('../../utils/error');
 
 const NATIVE_AUTH='native_auth';
 const OAUTH='oauth';
@@ -14,6 +15,7 @@ const isPassFormatValid = require('../../utils/isPasswordFormatValid');
 // error responses
 const INSUFFICIENT_INFO_ERROR='Please fill in all fields, insufficient data';
 const INCORRECT_CRED = { err: 'Wrong password or email!' };
+const UNIQUE_EMAIL_ERROR='Email is already in user';
 const EMAIL_VALIDITY_ERROR= { err: "Email doesn't look valid, \
 please contact us if you think this is by our error" };
 
@@ -36,13 +38,13 @@ module.exports = async (req, res, next) => {
         let SIGNIN_MODE = getSignInMode(userData);
 
         if (SIGNIN_MODE===INSUFFICIENT_INFO) {
-            return res.status(422).send(INSUFFICIENT_INFO_ERROR);
+            throw new ErrorHandler(422, INSUFFICIENT_INFO_ERROR)
         }
 
         // check if the email is already in use
         const userInRecords = await getUser({ email: userData.email });
         if (userInRecords) {
-            return res.status(409).send({ err: 'Email is already in use' });
+            throw new ErrorHandler(422, UNIQUE_EMAIL_ERROR);
         }
         // doesn't exist already
 
@@ -59,10 +61,10 @@ module.exports = async (req, res, next) => {
 
             // check if email is valid
             if (!isEmailValid(userData.email)) {
-                return res.status(401).send(EMAIL_VALIDITY_ERROR)
+                throw new ErrorHandler(401, EMAIL_VALIDITY_ERROR);
             } else if (!isPassFormatValid(userData.password)) {
                 // check if password length is appropriate
-                return res.status(401).send(PASSWORD_LENTH_ERROR);
+                throw new ErrorHandler(401, PASSWORD_LENTH_ERROR);
             }
 
             userToCreate.auth_system = NATIVE_AUTH;
@@ -78,7 +80,6 @@ module.exports = async (req, res, next) => {
         next();
 
     } catch(err) {
-        console.log(err);
-        return res.status(500).send('something went wrong');
+        next(err);
     }
 }

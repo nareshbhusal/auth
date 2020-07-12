@@ -4,6 +4,7 @@ const PasswordResetTicket = require('../../models/PasswordResetTicket');
 const getTicket = require('../../controllers/resetTicket/getTicket');
 
 const isPassFormatValid = require('../../utils/isPasswordFormatValid');
+const ErrorHandler = require('../../utils/error');
 
 const minPassLength=6;
 const passLengthError = { err: `Password too short, minumum length: ${minPassLength}.` };
@@ -14,17 +15,17 @@ const changePassword = async(req, res, next) => {
         const { token, genTime, password, email, user_id } = req.body;
 
         if (!isPassFormatValid(password)) {
-            return res.status(409).send(passLengthError);
+            throw new ErrorHandler(409, passLengthError);
         }
 
         const ticketInRecords = await getTicket({ token, genTime });
         if (!ticketInRecords) {
-            return res.status(409).send({ msg: "This reset link is not valid" });
+            throw new ErrorHandler(409, 'This reset link is not valid');
         }
         // check if it has expired
         if (ticketInRecords.expirationTime< new Date().getTime()) {
             // expired
-            return res.status(401).send({ msg: "This reset key is no longer valid" });
+            throw new ErrorHandler(401, 'This reset key is not valid');
         }
 
         // update password
@@ -40,8 +41,7 @@ const changePassword = async(req, res, next) => {
         next();
 
     } catch(err) {
-        console.log(err);
-        return res.status(500).send({ err: 'Server error changing password!' });
+        next(err);
     }
 }
 

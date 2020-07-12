@@ -33,11 +33,11 @@ module.exports = PasswordResetTicket;
  *
  * create table PasswordResetTickets(
     user_id integer NOT NULL,
-    tokenHash varchar(65) NOT NULL,
-    genTime varchar(15) NOT NULL,
-	expirationTime varchar(15) NOT NULL,
-    tokenUsed boolean NOT NULL,
-	emailSent boolean NOT NULL,
+    "tokenHash" varchar(65) NOT NULL,
+    "genTime" varchar(15) NOT NULL,
+	"expirationTime" varchar(15) NOT NULL,
+    "tokenUsed" boolean NOT NULL,
+	"emailSent" boolean NOT NULL,
     ip VARCHAR(50)
 )
  *

@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 
 const util = require('util');
 
+const ErrorHandler = require('../../utils/error');
 // determine if native or google auth is being requestsed from
     // route accordingly
     // learn an api response standard
@@ -17,7 +18,7 @@ const INSUFFICIENT_INFO='insufficient';
 
 // error responses
 const INSUFFICIENT_INFO_ERROR='Please fill in all fields, insufficient data';
-const INCORRECT_CRED = { err: 'Wrong password or email!' };
+const INCORRECT_CRED = 'Wrong password or email!';
 
 const getLoginMode = ({ email, password, tokenId }) => {
     if (email && password) {
@@ -35,7 +36,7 @@ const getLoginMode = ({ email, password, tokenId }) => {
 
 const passwordsMatch = async (inputPassword, dbPasswordHash) => {
     bcrypt.compare = util.promisify(bcrypt.compare);
-    console.log(`Checking if ${inputPassword} matched the hash ${dbPasswordHash}`);
+    //console.log(`Checking if ${inputPassword} matched the hash ${dbPasswordHash}`);
     const matches = await bcrypt.compare(inputPassword, dbPasswordHash);
     return matches;
 }
@@ -50,7 +51,7 @@ module.exports = async (req, res, next) => {
         console.log(LOGIN_MODE);
 
         if (LOGIN_MODE===INSUFFICIENT_INFO) {
-            return res.status(422).send(INSUFFICIENT_INFO_ERROR);
+            throw new ErrorHandler(422, INSUFFICIENT_INFO_ERROR);
         }
 
         if (LOGIN_MODE===OAUTH) {
@@ -59,13 +60,11 @@ module.exports = async (req, res, next) => {
         // check if requestedUser exists
         const userInRecords = await getUser({email: requestedUser.email});
          if (!userInRecords) {
-            return res.status(401)
-                .send({ err: 'Wrong password or email!' });
+            throw new ErrorHandler(401, INCORRECT_CRED);
          }
         if (userInRecords.deleted) {
             // if user is deleted
-            return res.status(401)
-                .send({ err: 'Wrong password or email' });
+            throw new ErrorHandler(401, INCORRECT_CRED);
         }
 
 
@@ -73,14 +72,12 @@ module.exports = async (req, res, next) => {
         if (LOGIN_MODE===OAUTH &&
             userInRecords.auth_system===NATIVE) {
 
-                return res.status(401)
-                    .send({ err: 'Try login in with email!' });
+                throw new ErrorHandler(401, 'Try login in with email');
 
         } else if (LOGIN_MODE===NATIVE_AUTH &&
             userInRecords.auth_system===OAUTH) {
 
-                return res.status(401)
-                    .send({ err: 'Try login in with google!' });
+                throw new ErrorHandler(401, 'Try login in with google');
         }
 
 
@@ -88,7 +85,7 @@ module.exports = async (req, res, next) => {
             // verify password
             const isPasswordCorrect = await passwordsMatch(requestedUser.password, userInRecords.pass);
 
-            if(!isPasswordCorrect) return res.status(401).send(INCORRECT_CRED);
+            if(!isPasswordCorrect) throw new ErrorHandler(401, INCORRECT_CRED);
         }
 
         // save session
@@ -98,7 +95,6 @@ module.exports = async (req, res, next) => {
         next();
 
     } catch(err) {
-        console.log(err);
-        return res.status(500).send('500 error');
+        next(err);
     }
 }

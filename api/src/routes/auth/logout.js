@@ -9,6 +9,7 @@ module.exports = async (req, res, next) => {
 
         req.session.destroy((err) => {
             if(err) {
+                delete req.session
                 return console.log(err);
             }
         });
@@ -17,7 +18,6 @@ module.exports = async (req, res, next) => {
         res.status(200).send('logout success!')
         next();
     } catch(err) {
-        console.log(err);
-        return res.status(500).send('server error');
+        next(err);
     }
 }

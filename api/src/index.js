@@ -12,6 +12,7 @@ const sessionStore = require('./store');
 const api = require('./routes');
 
 const useragent = require('express-useragent');
+const { handleError } = require('./utils/error')
 
 
 // configure middlewares
@@ -49,6 +50,7 @@ db.authenticate()
 
 
 app.use(api);
+
 if (process.env.NODE_ENV==='production'){
     app.use(express.static(path.join(clientPath, 'dist')));
 
@@ -56,5 +58,10 @@ if (process.env.NODE_ENV==='production'){
         return res.sendFile(path.join(clientPath, 'dist/index.html'));
     });
 }
+
+app.use((err, req, res, next) => {
+    handleError(err, res);
+});
+
 
 module.exports = app;

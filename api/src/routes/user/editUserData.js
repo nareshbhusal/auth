@@ -1,9 +1,10 @@
 const updateUser = require('../../controllers/user/updateUser');
+const { ErrorHandler } = require('../../utils/error');
 
 module.exports = async (req, res, next) => {
     try {
         const { fullname, email, password } = req.body;
-        if (!fullname && !email && !password) return res.status(401).send('nothing changed');
+        if (!fullname && !email && !password) throw new ErrorHandler(401, 'Nothing changed');
         const user_id = req.session.user_id;
 
         let newUserData = {};
@@ -15,9 +16,7 @@ module.exports = async (req, res, next) => {
         await updateUser(user_id, newUserData);
         res.send('user updated');
         next();
-
-    } catch(err) {
-        console.log(err);
-        return res.status(500).send('server error');
+    } catch(err){
+        next(err)
     }
 }

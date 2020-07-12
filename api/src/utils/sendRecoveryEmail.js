@@ -1,4 +1,5 @@
 const sendEmail = require('../utils/sendEmail');
+const { BASE_CLIENT_URL } = process.env;
 const OAUTH='oauth';
 
 const sendRecoveryEmail = async({ email, name, token, genTime, auth_system }) => {

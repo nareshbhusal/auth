@@ -21,7 +21,7 @@ const createResetTicket = async ({user_id, emailSent=true, ip}) => {
         emailSent,
         ip
     });
-    return token;
+    return { ticket, token };
 }
 
 module.exports = createResetTicket;
