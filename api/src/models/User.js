@@ -39,6 +39,9 @@ const user = db.define('user', {
     },
     joined: {
         type: Sequelize.STRING
+    },
+    deleted: {
+        type: Sequelize.BOOLEAN
     }
 });
 
