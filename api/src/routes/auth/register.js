@@ -3,7 +3,8 @@ const createUser = require('../../controllers/user/createUser');
 
 const googleAuth = require('../../controllers/user/googleAuth');
 const updateLoginSession = require('../../controllers/session/updateLoginSessions');
-const ErrorHandler = require('../../utils/error');
+
+const { ErrorHandler, Success, Fail } = require('../../utils/response');
 
 const NATIVE_AUTH='native_auth';
 const OAUTH='oauth';
@@ -14,12 +15,12 @@ const isPassFormatValid = require('../../utils/isPasswordFormatValid');
 
 // error responses
 const INSUFFICIENT_INFO_ERROR='Please fill in all fields, insufficient data';
-const INCORRECT_CRED = { err: 'Wrong password or email!' };
+const INCORRECT_CRED = 'Wrong password or email!';
 const UNIQUE_EMAIL_ERROR='Email is already in user';
-const EMAIL_VALIDITY_ERROR= { err: "Email doesn't look valid, \
-please contact us if you think this is by our error" };
+const EMAIL_VALIDITY_ERROR= "Email doesn't look valid, \
+please contact us if you think this is by our error";
 
-const PASSWORD_LENTH_ERROR= { err: 'Password should be atleast 6 characters long' };
+const PASSWORD_LENTH_ERROR= 'Password should be atleast 6 characters long';
 
 const getSignInMode = ({ fullname, email, password, tokenId }) => {
     if (fullname && email && password) {
@@ -38,13 +39,13 @@ module.exports = async (req, res, next) => {
         let SIGNIN_MODE = getSignInMode(userData);
 
         if (SIGNIN_MODE===INSUFFICIENT_INFO) {
-            throw new ErrorHandler(422, INSUFFICIENT_INFO_ERROR)
+            return Fail(400, {msg: INSUFFICIENT_INFO_ERROR}, res);
         }
 
         // check if the email is already in use
         const userInRecords = await getUser({ email: userData.email });
         if (userInRecords) {
-            throw new ErrorHandler(422, UNIQUE_EMAIL_ERROR);
+            return Fail(400, {msg: UNIQUE_EMAIL_ERROR}, res);
         }
         // doesn't exist already
 
@@ -61,10 +62,10 @@ module.exports = async (req, res, next) => {
 
             // check if email is valid
             if (!isEmailValid(userData.email)) {
-                throw new ErrorHandler(401, EMAIL_VALIDITY_ERROR);
+                return Fail(401, {msg: EMAIL_VALIDITY_ERROR}, res);
             } else if (!isPassFormatValid(userData.password)) {
                 // check if password length is appropriate
-                throw new ErrorHandler(401, PASSWORD_LENTH_ERROR);
+                return Fail(401, {msg: PASSWORD_LENTH_ERROR}, res);
             }
 
             userToCreate.auth_system = NATIVE_AUTH;
@@ -75,8 +76,7 @@ module.exports = async (req, res, next) => {
 
         // save session
         await updateLoginSession(req, createdUser);
-
-        res.send('user created successfully');
+        return Success(204, null, res);
         next();
 
     } catch(err) {

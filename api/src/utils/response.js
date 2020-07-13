@@ -8,7 +8,7 @@ class ErrorHandler extends Error {
 
 //https://github.com/omniti-labs/jsend
 
-const Success = (statusCode, data) => {
+const Success = (statusCode, data, res) => {
 
     res.status(statusCode).send({
         status: "success",
@@ -16,8 +16,7 @@ const Success = (statusCode, data) => {
     });
 }
 // fail is returned when rejected
-const Fail = (statusCode, data) => {
-
+const Fail = (statusCode, data, res) => {
     res.status(statusCode).send({
         status: "fail",
         data

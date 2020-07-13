@@ -2,7 +2,7 @@ const getUser = require('../../controllers/user/getUser');
 const sendRecoveryEmail = require('../../utils/sendRecoveryEmail');
 const createResetTicket = require('../../controllers/resetTicket/createResetTicket');
 
-const ErrorHandler = require('../../utils/error');
+const { ErrorHandler, Success, Fail } = require('../../utils/response');
 
 const isEligibleForResetTicket = (user_id) => {
     // implement rate limiter
@@ -16,7 +16,7 @@ const recoverPassword = async(req, res, next) => {
 
     try {
         const { email } = req.body;
-        if (!email) throw ErrorHandler(400, 'Email not provided');
+        if (!email) return Fail(400, {msg: 'Email not provided'}, res);
 
         const userInRecords = await getUser({ email });
         if (userInRecords) {
@@ -34,7 +34,7 @@ const recoverPassword = async(req, res, next) => {
                 genTime:ticket.genTime, auth_system
             });
         }
-        res.status(200).send({ msg: SUCCESS_MESSAGE });
+        return Success(200, {msg: SUCCESS_MESSAGE}, res); // take the message to client then change it to null
         next();
 
     } catch(err) {

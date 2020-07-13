@@ -12,7 +12,7 @@ const sessionStore = require('./store');
 const api = require('./routes');
 
 const useragent = require('express-useragent');
-const { handleError } = require('./utils/error')
+const handleError = require('./middlewares/handleError')
 
 
 // configure middlewares

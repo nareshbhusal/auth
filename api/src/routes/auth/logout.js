@@ -1,5 +1,7 @@
 const deleteUserSession = require('../../controllers/session/deleteUserSession');
 
+const { ErrorHandler, Success, Fail } = require('../../utils/response');
+
 module.exports = async (req, res, next) => {
     try {
         const user_id = req.session.user_id;
@@ -15,7 +17,7 @@ module.exports = async (req, res, next) => {
         });
         await deleteUserSession(user_id, currentSessionID, fromAll);
 
-        res.status(200).send('logout success!')
+        return Success(200, null, res);
         next();
     } catch(err) {
         next(err);

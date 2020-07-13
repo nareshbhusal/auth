@@ -1,5 +1,7 @@
 const deleteUser = require('../../controllers/user/deleteUser');
 
+const { ErrorHandler, Success, Fail } = require('../../utils/response');
+
 //delete user
 module.exports = async (req, res, next) => {
     try {
@@ -11,7 +13,7 @@ module.exports = async (req, res, next) => {
                 return console.log(err);
             }
         });
-        res.send('User deleted!');
+        return Success(200, null, res);
         next();
 
     } catch(err) {

@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 
 const util = require('util');
 
-const ErrorHandler = require('../../utils/error');
+const { ErrorHandler, Success, Fail } = require('../../utils/response');
 // determine if native or google auth is being requestsed from
     // route accordingly
     // learn an api response standard
@@ -60,11 +60,11 @@ module.exports = async (req, res, next) => {
         // check if requestedUser exists
         const userInRecords = await getUser({email: requestedUser.email});
          if (!userInRecords) {
-            throw new ErrorHandler(401, INCORRECT_CRED);
+             return Fail(400, { msg: INCORRECT_CRED }, res);
          }
         if (userInRecords.deleted) {
-            // if user is deleted
-            throw new ErrorHandler(401, INCORRECT_CRED);
+             // if user is deleted
+            return Fail(400, {msg: INCORRECT_CRED }, res);
         }
 
 
@@ -72,12 +72,12 @@ module.exports = async (req, res, next) => {
         if (LOGIN_MODE===OAUTH &&
             userInRecords.auth_system===NATIVE) {
 
-                throw new ErrorHandler(401, 'Try login in with email');
+            return Fail(401, {msg: 'Try login in with email'}, res);
 
         } else if (LOGIN_MODE===NATIVE_AUTH &&
             userInRecords.auth_system===OAUTH) {
 
-                throw new ErrorHandler(401, 'Try login in with google');
+            return Fail(401, {msg: 'Try login in with google'}, res);
         }
 
 
@@ -85,13 +85,13 @@ module.exports = async (req, res, next) => {
             // verify password
             const isPasswordCorrect = await passwordsMatch(requestedUser.password, userInRecords.pass);
 
-            if(!isPasswordCorrect) throw new ErrorHandler(401, INCORRECT_CRED);
+            if(!isPasswordCorrect) return Fail(401, { msg: INCORRECT_CRED }, res);
         }
 
         // save session
         await addLoginSession(req, userInRecords);
 
-        res.send(`logged in via ${LOGIN_MODE}`);
+        return Success(200, null, res);
         next();
 
     } catch(err) {
