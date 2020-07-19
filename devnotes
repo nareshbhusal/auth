@@ -1,18 +1,8 @@
-- seperate function calls in an api call into satisfactory layers of
-abstraction, so as to be able to perform everything from the cli
-/learn rest api design
-
-- Read onetab links for session topic
-
 - Rate limiting middleware for requests
 
 - Setting up api to only be accessible from <url>
 
 - Enable HTTPs
-
-- How to centralize control to the node, postgresql db interaction
-in the server? How does sequelize and mongoose ORMs do it? Make
-replacing sequelize a no-friction.
 
 - Learn about and setup a redis session layer after finishing with api endpoints
 kw: Toggleable caching, expose and work with raw query
@@ -20,3 +10,4 @@ kw: Toggleable caching, expose and work with raw query
 - Learn about and add integration testing
 
 - Performing tasks after res.send
+/ Make sure to not modify res, and run the process with `await` or setTimeout

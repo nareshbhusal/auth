@@ -3,6 +3,8 @@ const router = require('express').Router();
 const authRouter = require('./auth');
 const userRouter = require('./user');
 
+const cache = require('../services/cache');
+
 router.get('/', async (req, res) => {
     return res.send('Server is running but under construction')
 });
@@ -36,5 +38,6 @@ router.get('/ip', async (req, res) => {
         ua: req.useragent
     });
 });
+
 
 module.exports = router;
