@@ -1,18 +1,22 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import GoogleAuth from '../components/GoogleAuth/GoogleAuth';
 import Message from '../components/Message/Message';
 import styles from './styles/login.module.css';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
+import { EMAIL_REG, MIN_PASS_LENGTH } from '../constants';
 
-import Link from 'next/link'
+import { bindActionCreators } from 'redux';
+import { userLogin, changePassword } from '../store/actions';
+import { wrapper } from '../store/store';
 
-const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+import Link from 'next/link';
 
-export default function Login({ userLogin, id, resetPassword, changePassword, match, location }) {
+const Login = ({ userLogin, id, resetPassword, changePassword, match, location }) => {
 
     const [email, setEmail] = useState(() => {
         let hashEmail='';
@@ -47,12 +51,12 @@ export default function Login({ userLogin, id, resetPassword, changePassword, ma
    let passInputStyle = "";
    let emailInputStyle="";
 
-   if (emailFocused && !emailReg.test(email)) {
+   if (emailFocused && !EMAIL_REG.test(email)) {
        emailInputStyle=styles.invalid;
-   } else if(emailReg.test(email)) {
+   } else if(EMAIL_REG.test(email)) {
        emailInputStyle=styles.valid;
    }
-   if (passwordFocused && password.length<8) {
+   if (passwordFocused && password.length<=MIN_PASS_LENGTH) {
        passInputStyle=styles.invalid;
    } else if(password.length>7) {
        passInputStyle=styles.valid;
@@ -105,5 +109,18 @@ export default function Login({ userLogin, id, resetPassword, changePassword, ma
             </div>
         </div>
     );
-
 }
+
+export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
+  store.dispatch(serverRenderClock(true))
+  store.dispatch(addCount())
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addCount: bindActionCreators(addCount, dispatch),
+    startClock: bindActionCreators(startClock, dispatch),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Login);

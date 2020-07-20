@@ -11,3 +11,8 @@ kw: Toggleable caching, expose and work with raw query
 
 - Performing tasks after res.send
 / Make sure to not modify res, and run the process with `await` or setTimeout
+
+
+- for nextjs-client: thoroughly learn how next-redux-wrapper works from docs and tuts
+- configure redux with nextjs-client
+- migrate code to nextjs-client from client

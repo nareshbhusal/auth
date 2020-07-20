@@ -1,5 +1,5 @@
 import { LOGIN, FETCH_USER_DATA, LOGOUT, REGISTER, CHANGE_PASSWORD, CLEAR_USER_DATA, CHANGE_WEBSITE } from '../types';
-import api from '../../api';
+import api from '../../lib/api';
 import parseServerError from '../../utils/parseServerError';
 
 export const userLogin = ({ email, password, accessToken, tokenId }) => async (dispatch) => {

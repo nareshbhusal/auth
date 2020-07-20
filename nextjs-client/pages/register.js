@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import styles from './styles/register.module.css';
 
 import GoogleAuth from '../components/GoogleAuth/GoogleAuth';
 import Message from '../components/Message/Message';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-
-const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { EMAIL_REG, MIN_PASS_LENGTH } from '../constants';
 
 export default function Register({ userRegister, id }) {
 
@@ -45,12 +45,12 @@ export default function Register({ userRegister, id }) {
     } else if(name) {
         nameInputStyle=styles.valid;
     }
-    if (emailFocused && !emailReg.test(email)) {
+    if (emailFocused && !EMAIL_REG.test(email)) {
         emailInputStyle=styles.invalid;
-    } else if(emailReg.test(email)) {
+    } else if(EMAIL_REG.test(email)) {
         emailInputStyle=styles.valid;
     }
-    if (passwordFocused && password.length<8) {
+    if (passwordFocused && password.length<=MIN_PASS_LENGTH) {
         passInputStyle=styles.invalid;
     } else if(password.length>7) {
         passInputStyle=styles.valid;
