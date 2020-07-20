@@ -1,0 +1,21 @@
+.message{
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.error{
+    padding: 1rem;
+    background-color: rgba(243, 100, 75, 0.2);
+    color: red;
+}
+.success{
+    padding: 1rem;
+    background-color: rgba(4, 139, 4, 0.2);
+    color: rgb(7, 121, 7);
+}
+
+.placeholder{
+    padding: 1.5rem;
+    /* border: 1px solid blue; */
+}
+

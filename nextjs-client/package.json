@@ -1,0 +1,24 @@
+{
+  "name": "nextjs-client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
+    "next": "9.4.4",
+    "next-redux-wrapper": "^6.0.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-google-login": "^5.1.21",
+    "react-redux": "^7.2.0"
+  },
+  "devDependencies": {
+    "@zeit/next-css": "^1.0.1"
+  }
+}

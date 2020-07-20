@@ -11,6 +11,23 @@ services:
     #image: 'stripe/stripe-cli'
     #stdin_open: true
     #tty: true
+  pgadmin:
+    image: dpage/pgadmin4:4.22
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: pwdpwd
+    volumes:
+      - ./pgadmin:/root/.pgadmin
+    ports:
+      - '5050:80'
+    #command: 'echo "Set disable_coredump false" >> /etc/sudo.conf'
+    #sudo: setrlimit(RLIMIT_CORE): Operation not permitted (error fix)
+    logging:
+      driver: none
   nginx:
      restart: always
      build:
