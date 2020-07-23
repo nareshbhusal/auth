@@ -9,7 +9,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { EMAIL_REG, MIN_PASS_LENGTH } from '../constants';
 
-export default function Register({ userRegister, id }) {
+import { bindActionCreators } from 'redux';
+import { userLogin, changePassword } from '../store/actions';
+import { wrapper } from '../store/store';
+
+
+function Register({ userRegister, id }) {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -92,3 +97,20 @@ export default function Register({ userRegister, id }) {
         </div>
     );
 }
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userLogin: bindActionCreators(userLogin, dispatch),
+    changePassword: bindActionCreators(changePassword, dispatch),
+  }
+}
+
+//export const getStaticProps = wrapper.getStaticProps(
+//    ({store, preview}) => {
+//    // add something here?
+//        store.dispatch({type: 'TICK', payload: 'was set in other page ' + preview});
+//    }
+//);
+
+export default connect(null, mapDispatchToProps)(Register);

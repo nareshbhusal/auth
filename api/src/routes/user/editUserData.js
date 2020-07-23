@@ -14,8 +14,9 @@ module.exports = async (req, res, next) => {
         if(email) newUserData.email=email;
         if(password) newUserData.pass=password;
 
-        await updateUser(user_id, newUserData);
-        return Success(200, null, res);
+        const updatedUser = await updateUser(user_id, newUserData);
+        delete updatedUser.pass;
+        return Success(200, { updatedUser }, res);
         next();
     } catch(err){
         next(err)

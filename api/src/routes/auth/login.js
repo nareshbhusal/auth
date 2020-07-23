@@ -91,7 +91,7 @@ module.exports = async (req, res, next) => {
         // save session
         await addLoginSession(req, userInRecords);
 
-        return Success(200, null, res);
+        return Success(200, { user_id: userInRecords.user_id }, res);
         next();
 
     } catch(err) {

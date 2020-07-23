@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SettingsSide.module.css';
 
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom';
 
 const SettingsSide = ({ id }) => {
     return (

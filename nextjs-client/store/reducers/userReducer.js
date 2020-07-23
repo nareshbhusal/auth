@@ -8,18 +8,14 @@ const userReducer = (state=defaultState, action) => {
     // console.log(state);
     const { type, payload } = action;
 
-    if (type===FETCH_USER_DATA) {
-
-        const currentWebsite = payload.currentWebsite || payload.websites[0];
-
-        return { ...payload, currentWebsite };
-
-    } else if(type===CLEAR_USER_DATA) {
-        return {};
-    } else if (type===CHANGE_WEBSITE) {
-        return { ...state, currentWebsite: payload };
+    switch(type){
+        case FETCH_USER_DATA:
+            return { ...payload };
+        case CLEAR_USER_DATA:
+            return {};
+        default:
+            return state;
     }
-    return state;
 }
 
 export default userReducer;

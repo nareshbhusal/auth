@@ -10,6 +10,7 @@ const getUser = async userData => {
             ...userData
         }
     });
+    delete userInRecords.pass;
    // if(userInRecords){
    //     if (userInRecords.deleted) return null;
    // }

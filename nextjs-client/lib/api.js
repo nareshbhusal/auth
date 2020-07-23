@@ -1,9 +1,9 @@
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-const { URL } = process.env;
+const { BASE_URL } = process.env;
 
 const api= axios.create({
-    baseURL: URL,
+    baseURL: BASE_URL,
     withCredentials: true,
     headers: { crossDomain: true, 'Content-Type': 'application/json' },
 })

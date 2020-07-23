@@ -1,9 +1,29 @@
 import { LOGIN, FETCH_USER_DATA, LOGOUT, REGISTER, CHANGE_PASSWORD, CLEAR_USER_DATA, CHANGE_WEBSITE } from '../types';
 import api from '../../lib/api';
-import parseServerError from '../../utils/parseServerError';
+
+const handleResponse = res => {
+    const { status, data } = res.data;
+    // TODO: Implement clear UI messaging
+    switch(status) {
+        case 'fail':
+            console.log('failed with data:');
+            console.log(data);
+            break;
+        case 'success':
+            console.log('success with data: ');
+            console.log(data);
+            break;
+        case 'error':
+            console.log('server error');
+            break;
+        default:
+            console.log('Nanii!!!');
+    }
+    return { status, data };
+}
 
 export const userLogin = ({ email, password, accessToken, tokenId }) => async (dispatch) => {
-    console.log({ email, password, accessToken, tokenId });
+    console.log('logging in with: ', { email, password, accessToken, tokenId });
     try {
         const res = await api.post('login', {
             email,
@@ -11,17 +31,16 @@ export const userLogin = ({ email, password, accessToken, tokenId }) => async (d
             accessToken,
             tokenId
         });
-        const id = res.data.id;
-        console.log(res.data);
+        const user_id = res.data.data.user_id;
+        console.log(user_id);
         dispatch({
             type: LOGIN,
-            payload: id
+            payload: user_id
         });
+        return handleResponse(res);
         dispatch(fetchUserData());
-        return { id };
     } catch(err) {
-        err = parseServerError(err);
-        return { err };
+        return handleResponse(err.response);
     }
 }
 
@@ -43,52 +62,41 @@ export const userRegister = ({ name, email, password, accessToken, tokenId }) =>
         })
         return { id };
     } catch(err) {
-        err = parseServerError(err);
-        return { err };
     }
 }
 
 export const fetchUserData = () => async dispatch => {
     try {
         console.log('fetching user data')
-        const res = await api.get('userdata');
-        const data = res.data.msg;
-        let { name, email, websites, subscription, billingInfo } = data;
-        websites = websites || [];
-        billingInfo = billingInfo || {};
+        const res = await api.get('/user/current');
+        const { email, fullname, user_id, subscription, billingInfo } = handleResponse(res).data;
+        const userData = { email, fullname, user_id, subscription, billingInfo };
 
         dispatch({
             type: FETCH_USER_DATA,
-            payload: {
-                name, email, websites, subscription, billingInfo
-            }
+            payload: userData
         });
-        console.log('billingInfo pushed to store');
-        // push to store
-
+        console.log('User data pushed to store');
     } catch(err) {
-        console.log(err);
-        err = parseServerError(err);
-        return { err };
+        return handleResponse(err.response);
     }
 }
 
 export const updateUserData = (updatedData) => async dispatch => {
     try {
         console.log('updating user data', updatedData);
-        const res = await api.put('userdata', { updatedData });
-        const data = res.data.msg;
+        const res = await api.put('/user/edit', { updatedData });
 
-        console.log(data);
+        const { email, fullname, user_id, subscription, billingInfo } = handleResponse(res).data;
+        const userData = { email, fullname, user_id, subscription, billingInfo };
 
-        console.log('refetching userData');
-        dispatch(fetchUserData());
-        return { msg: data.msg };
-
+        dispatch({
+            type: FETCH_USER_DATA,
+            payload: userData
+        });
+        console.log('User data updated and pushed to store');
     } catch(err) {
-        console.log(err);
-        err = parseServerError(err);
-        return { err };
+        return handleResponse(err.response);
     }
 }
 
@@ -111,16 +119,15 @@ export const changePassword = ({ hash, password }) => async dispatch => {
             hash,
             password
         });
-        const id = res.data.id;
+        handleResponse(res);
         dispatch({
             type: CHANGE_PASSWORD,
             payload: id
         });
-        console.log(res.data);
-        return { id };
+        return "success";
     } catch(err) {
-        err = parseServerError(err);
-        return { err }
+        handleResponse(err.response);
+        return "fail";
     }
 }
 
@@ -128,13 +135,13 @@ export const userLogout = () => async (dispatch) => {
     try {
         const res = await api.post('logout');
         window.localStorage.clear();
-        console.log(res.data.msg);
+        handleResponse(res);
         dispatch({
             type: LOGOUT
         })
         dispatch(clearUserData());
     } catch(err) {
-        const error = parseServerError(err);
+        handleResponse(err.response);
     }
 }
 

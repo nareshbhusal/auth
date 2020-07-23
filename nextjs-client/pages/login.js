@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useRouter } from 'next/router';
+
 import GoogleAuth from '../components/GoogleAuth/GoogleAuth';
 import Message from '../components/Message/Message';
 import styles from './styles/login.module.css';
@@ -16,7 +18,14 @@ import { wrapper } from '../store/store';
 
 import Link from 'next/link';
 
-const Login = ({ userLogin, id, resetPassword, changePassword, match, location }) => {
+const Login = (props) => {
+
+    const { userLogin, resetPassword, changePassword, redirected } = props;
+    const { push, pathname } = useRouter();
+
+    useEffect(() => {
+        if (redirected) push('/login', '/login', { shallow: true });
+    }, [pathname]);
 
     const [email, setEmail] = useState(() => {
         let hashEmail='';
@@ -42,9 +51,15 @@ const Login = ({ userLogin, id, resetPassword, changePassword, match, location }
         setPassword(e.target.value);
     }
 
+    let hash = ''; // TODO: Read reset password's key from url
+    // TODO: seperate routes for resetpassword and login
+    const submitHandler = resetPassword ? changePassword : userLogin;
     const onSubmitHandler = async e => {
         e.preventDefault();
-        console.log(email, password);
+        error && setError('');
+        const r = await submitHandler({ email, password, hash });
+        //console.log('final:');
+        //console.log(r);
     }
 
 
@@ -111,15 +126,16 @@ const Login = ({ userLogin, id, resetPassword, changePassword, match, location }
     );
 }
 
-export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
-  store.dispatch(serverRenderClock(true))
-  store.dispatch(addCount())
-});
 
+//export const getStaticProps = wrapper.getStaticProps(
+//    ({store, preview}) => {
+//        store.dispatch({type: 'TICK', payload: 'was set in other page ' + preview});
+//    }
+//);
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCount: bindActionCreators(addCount, dispatch),
-    startClock: bindActionCreators(startClock, dispatch),
+    userLogin: bindActionCreators(userLogin, dispatch),
+    changePassword: bindActionCreators(changePassword, dispatch),
   }
 }
 

@@ -41,7 +41,7 @@ const App = ({ id, fetchUserData }) => {
                     <Route exact path={routesToRedirectFrom} render={() => <Redirect to={`/dashboard/${id}`}/>} />
 
                     <ProtectedRoute exact path="/dashboard/:id" component={Dashboard} />
-                    
+
                     {/* <ProtectedRoute exact path="/dashboard/:id/questions" component={Questions} /> */}
                     {/* <ProtectedRoute exact path="/dashboard/:id/questions/:subpage" component={Questions} /> */}
 

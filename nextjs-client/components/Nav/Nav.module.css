@@ -1,0 +1,19 @@
+.nav{
+    /* border-bottom: 1px solid #ddd; */
+    border: none;
+    padding: 1.5rem;
+    position: absolute;
+    box-shadow: 0 1px 4px 0px rgba(0,0,0,0.05);
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    background-color: #fff;
+}
+
+.logo{
+    color: blue;
+    font-size: 2.2rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+

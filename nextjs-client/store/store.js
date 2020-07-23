@@ -15,17 +15,18 @@ const bindMiddleware = (middleware) => {
   return applyMiddleware(...middleware)
 }
 
+const makeStore = context => {
+    const initialState = loadState();
 
-const initStore = () => {
     const store = createStore(
         reducers,
+        initialState,
         bindMiddleware([thunkMiddleware])
     );
     store.subscribe(() => {
         saveState(store.getState());
     });
-
     return store;
 }
 
-export const wrapper = createWrapper(initStore);
+export const wrapper = createWrapper(makeStore, {debug: true});
