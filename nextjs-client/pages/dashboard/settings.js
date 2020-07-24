@@ -21,17 +21,14 @@ const Settings = (props) => {
 
     const { updateUserData, fetchUserData, changePassword } = props;
     const userData = useSelector((state) => state.userData);
-    const user_id = { userData };
 
-   // useEffect(() => {
-   //     // update userData on every render
-   //     fetchUserData();
-   // }, [user_id]);
-
-    //const [data, setData] = useState({ userData });
+    useEffect(() => {
+        // update userData on every render
+        fetchUserData
+    }, []);
+    //TODO: Fix bug - UI probelm, potentially something about rehydration
 
     const { fullname, email, websites, subscription, billingInfo } = userData;
-    console.log(userData);
 
     const type=''; // settings/:type
     let header = type;

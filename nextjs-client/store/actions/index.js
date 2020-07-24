@@ -38,7 +38,6 @@ export const userLogin = ({ email, password, accessToken, tokenId }) => async (d
             payload: user_id
         });
         return handleResponse(res);
-        dispatch(fetchUserData());
     } catch(err) {
         return handleResponse(err.response);
     }
@@ -74,7 +73,7 @@ export const fetchUserData = () => async dispatch => {
 
         dispatch({
             type: FETCH_USER_DATA,
-            payload: userData
+            payload: { ...userData }
         });
         console.log('User data pushed to store');
     } catch(err) {
@@ -119,15 +118,13 @@ export const changePassword = ({ hash, password }) => async dispatch => {
             hash,
             password
         });
-        handleResponse(res);
         dispatch({
             type: CHANGE_PASSWORD,
             payload: id
         });
-        return "success";
+        return handleResponse(res);
     } catch(err) {
-        handleResponse(err.response);
-        return "fail";
+        return handleResponse(err.response);
     }
 }
 
@@ -135,13 +132,13 @@ export const userLogout = () => async (dispatch) => {
     try {
         const res = await api.post('logout');
         window.localStorage.clear();
-        handleResponse(res);
         dispatch({
             type: LOGOUT
         })
         dispatch(clearUserData());
+        return handleResponse(res);
     } catch(err) {
-        handleResponse(err.response);
+        return handleResponse(err.response);
     }
 }
 

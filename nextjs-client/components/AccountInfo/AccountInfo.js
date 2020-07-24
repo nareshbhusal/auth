@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AccountInfo.module.css';
 
 
 const AccountInfo = ({ name, email, updateData }) => {
 
-    const [userName, setName] = useState(name ||'');
-    const [userEmail, setEmail] = useState(email || '');
+    const [userName, setName] = useState('');
+    const [userEmail, setEmail] = useState('');
 
     const updateUserData = (e) => {
         e.preventDefault();
         updateData({ fullname: userName, email: userEmail });
     }
+    useEffect(() => {
+        setName(name);
+        setEmail(email);
+    }, [name, email]);
 
     return (
         <form className={styles.form}>

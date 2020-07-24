@@ -6,8 +6,7 @@ import { useSelector } from 'react-redux';
 
 const Nav = () => {
 
-    const state = useSelector((state) => state);
-    const user_id = state.auth.user_id;
+    const user_id = useSelector((state) => state.auth.user_id);
 
     return (
         <nav className={styles.nav}>

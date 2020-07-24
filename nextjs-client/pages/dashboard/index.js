@@ -15,12 +15,7 @@ import { wrapper } from '../../store/store';
 const Dashboard = (props) => {
 
     const { userLogout, fetchUserData } = props;
-    const [user_id, setUser_id] = useState('');
-    const auth = useSelector((state) => state.auth);
-    // TODO: redirect to /login if not logged in - do this on /dashboard/*
-    useEffect(() => {
-        setUser_id(auth.user_id);
-    });
+    const user_id = useSelector((state) => state.auth.user_id);
 
     return (
         <div className={styles.dashboard}>

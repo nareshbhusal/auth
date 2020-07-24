@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './styles/forgot-password.module.css';
 
 import Message from '../components/Message/Message';
-import parseServerError from '../utils/parseServerError';
 import api from '../lib/api';
 
 import { EMAIL_REG } from '../constants';
@@ -30,7 +29,6 @@ const ForgotPassword = (props) => {
             setMessage({ err: '', msg: successMsg });
 
         } catch(err) {
-            const parsedErrorMsg = parseServerError(err);
             setMessage({ err: errorMsg || errorMsg, msg: '' });
         }
     }

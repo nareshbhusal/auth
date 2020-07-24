@@ -16,32 +16,31 @@ import { bindActionCreators } from 'redux';
 import { userLogin, changePassword } from '../store/actions';
 import { wrapper } from '../store/store';
 
+import Router from 'next/router';
 import Link from 'next/link';
 
-const Login = (props) => {
+const Login = ({ userLogin, changePassword, redirected, redirectTo, toChangePassword }) => {
 
-    const { userLogin, resetPassword, changePassword, redirected } = props;
     const { push, pathname } = useRouter();
 
-    useEffect(() => {
-        if (redirected) push('/login', '/login', { shallow: true });
-    }, [pathname]);
-
-    const [email, setEmail] = useState(() => {
-        let hashEmail='';
-        if (resetPassword) {
-            const qs = queryString.parse(location.search);
-            hashEmail = qs.email;
-        }
-        return hashEmail;
-    });
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const [showPass, setShowPass] = useState(resetPassword);
+    const [showPass, setShowPass] = useState(toChangePassword);
 
     const [emailFocused, setEmailFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
+
+    const router = useRouter();
+    const { tockenHash } = router.query;
+
+    useEffect(() => {
+        if (toChangePassword) {
+            // TODO: fetch password for the ticket, from db or from the query string
+            // TODO: Also get and set ticketHash from the query string
+        }
+    })
 
 
     const handleEmailInput = e => {
@@ -51,13 +50,16 @@ const Login = (props) => {
         setPassword(e.target.value);
     }
 
-    let hash = ''; // TODO: Read reset password's key from url
     // TODO: seperate routes for resetpassword and login
-    const submitHandler = resetPassword ? changePassword : userLogin;
+    const submitHandler = toChangePassword ? changePassword : userLogin;
     const onSubmitHandler = async e => {
         e.preventDefault();
         error && setError('');
-        const r = await submitHandler({ email, password, hash });
+        const { status } = await submitHandler({ email, password, tockenHash });
+        if (status==='success') {
+            push(redirectTo || '/dashboard');
+            return;
+        }
         //console.log('final:');
         //console.log(r);
     }
@@ -84,12 +86,12 @@ const Login = (props) => {
             <div className={styles.wrapper}>
                 <form onSubmit={onSubmitHandler} className={styles.form}>
                     <h1 className={styles.heading}>
-                        {resetPassword ? "Change Password" : "Welcome back!" }
+                        {toChangePassword ? "Change Password" : "Welcome back!" }
                     </h1>
                     <Message error={error}/>
                     <label className={styles.label} htmlFor="email">Email address</label>
                     <div className={styles.inputWrapper}>
-                        {resetPassword ?
+                        {toChangePassword ?
                         <input disabled value={email} required className={styles.input+` ${emailInputStyle}`} name="email" type="email" placeholder="Email address"/>
                         :
                         <input onClick={()=>setEmailFocused(true)} autoFocus value={email} required onChange={handleEmailInput} className={styles.input+` ${emailInputStyle}`} name="email" type="email" placeholder="Email address"/>
@@ -97,19 +99,19 @@ const Login = (props) => {
                         <i className=""></i>
                     </div>
 
-                    <label className={styles.label} htmlFor="password">{resetPassword ? "Enter your new password": "Password"}</label>
+                    <label className={styles.label} htmlFor="password">{toChangePassword ? "Enter your new password": "Password"}</label>
                     <div className={styles.inputWrapper}>
                         <input onClick={()=>setPasswordFocused(true)} value={password} required onChange={handlePasswordInput} className={styles.input+` ${passInputStyle}`} name="password" type={showPass ? "text" : "password"} placeholder="Password" />
                         <FontAwesomeIcon className={styles.fa} onClick={(toggleEye)} icon={ showPass ? faEye : faEyeSlash } />
 
                     </div>
-                    {resetPassword ? null
+                    {toChangePassword ? null
                     :
                     <Link href="/forgot-password">
                         <a className={styles.forgotLink}>Forgot password?</a>
                     </Link>
                     }
-                    <input className={styles.input} type="submit" value={resetPassword ? "Log in with new password" : "Log in"}/>
+                    <input className={styles.input} type="submit" value={toChangePassword ? "Log in with new password" : "Log in"}/>
                     <div className={styles.register}>
                         <p>Don't have an account?</p>
                         <Link href="/register">
@@ -117,7 +119,7 @@ const Login = (props) => {
                         </Link>
                     </div>
                 </form>
-                {resetPassword ? null
+                {toChangePassword ? null
                 :
                 <GoogleAuth callback={userLogin} buttonText="Log in with google" />
                 }

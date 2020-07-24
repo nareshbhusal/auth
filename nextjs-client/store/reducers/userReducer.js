@@ -5,12 +5,12 @@ const defaultState = {
 };
 
 const userReducer = (state=defaultState, action) => {
-    // console.log(state);
     const { type, payload } = action;
 
     switch(type){
         case FETCH_USER_DATA:
-            return { ...payload };
+            const newState = { ...state, ...payload }
+            return newState;
         case CLEAR_USER_DATA:
             return {};
         default:
