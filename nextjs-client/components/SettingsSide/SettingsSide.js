@@ -9,31 +9,31 @@ import Link from 'next/link';
 const SettingsSide = () => {
     return (
         <div className={styles.container}>
-            <Link href={`/dashboard/settings`}>
+            <Link href={`/dashboard/settings`} as={`/dashboard/settings`}>
                 <a className={styles.link}>
                     <FontAwesomeIcon icon={faFileInvoice} />
                     <span>account info</span>
                 </a>
             </Link>
-            <Link href={`/dashboard/settings/websites`}>
+            <Link href={`/dashboard/settings/[type]`} as={`/dashboard/settings/websites`}>
                 <a className={styles.link}>
                     <FontAwesomeIcon icon={faFileInvoice} />
                     <span>websites</span>
                 </a>
             </Link>
-            <Link href={`/dashboard/settings/billing`}>
+            <Link href={`/dashboard/settings/[type]`} as={`/dashboard/settings/billing`}>
                 <a className={styles.link}>
                     <FontAwesomeIcon icon={faFileInvoice} />
                     <span>Billing</span>
                 </a>
             </Link>
-            <Link href={`/dashboard/settings/subscription`}>
+            <Link href={`/dashboard/settings/[type]`} as={`/dashboard/settings/subscription`}>
                 <a className={styles.link}>
                     <FontAwesomeIcon icon={faFileInvoice} />
                     <span>Subscription</span>
                 </a>
             </Link>
-            <Link href={`/dashboard/settings/invoices`}>
+            <Link href={`/dashboard/settings/[type]`} as={`/dashboard/settings/invoices`}>
                 <a className={styles.link}>
                     <FontAwesomeIcon icon={faFileInvoice} />
                     <span>Invoices</span>

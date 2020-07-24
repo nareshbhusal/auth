@@ -9,7 +9,7 @@ const cc_format = (value) => {
     return value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim();
 }
 
-const Billing =({ updateData, billingInfo }) => {
+const Billing = ({ updateData, billingInfo }) => {
 
     // const { name, number, expiryMonth, expiryYear, cvv, zip } = billingInfo;
 

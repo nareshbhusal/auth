@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AccountInfo.module.css';
 
-
 const AccountInfo = ({ name, email, updateData }) => {
 
     const [userName, setName] = useState('');
